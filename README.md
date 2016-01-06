@@ -1,10 +1,10 @@
 # What's this?
 
-This is a braindead simple tool to apply SortChecker
-to arbitrary Debian packages. The tool loops over
-Debian packages, builds them and runs builtin testsuites.
-All actions are run under SortChecker to detect
-qsort-related bugs.
+Debian-test is a set of simple scripts to apply SortChecker
+to arbitrary Debian package. The tool would
+build the package and run it's builtin testsuite (if any).
+All actions are run under SortChecker (dynamic checker of qsort calls)
+to detect qsort-related bugs.
 
 Note that I only needed this tool for very pragmatic reasons
 so it's quick, dirty and probably not very well designed.
@@ -47,11 +47,11 @@ $ ./test_paks.sh $(cat paks.lst)
 This tool should be easily adaptable to other dynamic checkers
 (sanitizers, Valgrind, etc.) although I do not have plans
 to implement this any time soon. Ping me if you think it may of help
-for your project though.
+for your project.
 
-Tool fails to run tests for some packages:
-* non-standard makefile names (e.g. GNUmakefile in batmon.app, makefile in bcpp, etc.)
+Tool fails to run tests for many packages due to
+* non-standard makefile names (e.g. GNUmakefile in batmon.app, makefile in bcpp, Makefile.tests in xml2, etc.)
 * weird langs (Haskell, PHP, Ruby, etc.)
-* non-standard build system (e.g. SCons in balder2d, shell scripts in bomstrip, etc.)
+* non-standard build system (e.g. SCons in balder2d, waf in sushi, shell scripts in bomstrip, etc.)
 Still 70% of packages are testable on average.
 

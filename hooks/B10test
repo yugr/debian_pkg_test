@@ -62,8 +62,9 @@ elif test -f setup.py; then
   apt-get install -y --force-yes python-dev python-nose
   $TIMEOUT python setup.py test || true  # TODO: python3 ?
 else
-  # TODO: other buildsystems (waf e.g. sushi, scons e.g. balder2d)
-  # or languages (Lua e.g. teeworlds, Ruby e.g. bsfilter).
+  # Other buildsystems (waf e.g. sushi, scons e.g. balder2d)
+  # or languages (Lua e.g. teeworlds, Ruby e.g. bsfilter)
+  # seem to be too rare to bother.
   echo >&2 "$(basename $0): don't know type of project in $PWD; here is the directory contents:"
   ls -l >&2
   $(dirname $0)/C10shell
