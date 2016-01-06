@@ -1,0 +1,76 @@
+#!/bin/sh
+
+set -ex
+
+TIMEOUT='timeout -k 1m 20m'
+
+find_top_makefile() {
+  for mf in $(find -name Makefile); do
+    depth=$(echo $mf | grep -o / | wc -l)
+    echo $mf $depth
+  done | sort -nk2 | head -1 | awk '{print $1}'
+}
+
+print_make_goals() {
+  grep -o '^[A-Za-z0-9_]\+:' Makefile
+}
+
+build_goal() {
+  print_make_goals | grep -q "$1:" || return 1
+  $TIMEOUT make -k "$1" || true
+}
+
+cd /tmp/buildd/*/debian/..
+
+mf=$(find_top_makefile)
+
+if test -n "$mf"; then
+  cd $(dirname $mf)
+
+  # Best effort to run package standard tests here.
+  # Note that these might have already run under dh_auto_test
+  # but that's fine (more testing wouldn't hurt).
+
+  # First try top-level Makefile
+  # TODO: we could try `dh_auto_build $g' instead of this mess?
+  test_goals='check-all check checks test tests'
+  for g in $test_goals; do
+    if build_goal $g; then
+      return
+    fi
+  done
+
+  # Now try with subdirs
+  # TODO: do we really need this mess?
+  # TODO: another approach - grep sub-Makefiles for interesting goals.
+  for subdir in test tests testsuite example examples; do
+    for g in $test_goals all; do  # Note that we try 'all' as a last resort
+      if (test -d $subdir && test -f $subdir/Makefile && cd $subdir && build_goal $g); then
+        return
+      fi
+    done
+  done
+
+  echo >&2 "$(basename $0): don't know how to run tests in $PWD; here are the top-level goals:"
+  print_make_goals
+  $(dirname $0)/C10shell
+elif test \( -f Build.PL -o -f Makefile.PL \) -a -x Build; then
+  # Module::Build-style Perl package
+  $TIMEOUT ./Build test || true
+elif test -f setup.py; then
+  # Python setuptools-based package
+  apt-get install -y --force-yes python-dev python-nose
+  $TIMEOUT python setup.py test || true  # TODO: python3 ?
+else
+  # TODO: other buildsystems (waf e.g. sushi, scons e.g. balder2d)
+  # or languages (Lua e.g. teeworlds, Ruby e.g. bsfilter).
+  echo >&2 "$(basename $0): don't know type of project in $PWD; here is the directory contents:"
+  ls -l >&2
+  $(dirname $0)/C10shell
+fi
+
+if test -n "$SHELL_ON_DONE"; then
+  echo "$(basename $0): build and test done, running shell"
+  $(dirname $0)/run-shell
+fi
+

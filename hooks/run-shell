@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+
+apt-get install -y --force-yes vim less bash gdb
+cd /tmp/buildd/*/debian/..
+/bin/bash < /dev/tty > /dev/tty 2> /dev/tty
