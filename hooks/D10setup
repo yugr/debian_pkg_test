@@ -1,6 +1,7 @@
 #!/bin/sh
 
-set -ex
+set -e
+set -x
 
 test -d "$SHARED_DIR"
 test -n "$SORTCHECK_OPTIONS"

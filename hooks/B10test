@@ -1,6 +1,7 @@
 #!/bin/sh
 
-set -ex
+set -e
+set -x
 
 TIMEOUT='timeout -k 1m 20m'
 
@@ -15,12 +16,33 @@ print_make_goals() {
   grep -o '^[A-Za-z0-9_]\+:' Makefile
 }
 
-build_goal() {
+try_build_goal() {
   print_make_goals | grep -q "$1:" || return 1
   $TIMEOUT make -k "$1" || true
 }
 
-cd /tmp/buildd/*/debian/..
+try_build_goals() {
+  for g in $@; do
+    if try_build_goal $g; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+try_build_subdirs() {
+  for subdir in test tests testsuite example examples; do
+  for g in $@; do
+    if (test -d $subdir && test -f $subdir/Makefile && cd $subdir && try_build_goal $g); then
+      return 0
+    fi
+  done
+  done
+  return 1
+}
+
+ROOT=/tmp/buildd/*/debian/..
+cd $ROOT
 
 mf=$(find_top_makefile)
 
@@ -34,26 +56,19 @@ if test -n "$mf"; then
   # First try top-level Makefile
   # TODO: we could try `dh_auto_build $g' instead of this mess?
   test_goals='check-all check checks test tests'
-  for g in $test_goals; do
-    if build_goal $g; then
-      return
-    fi
-  done
-
-  # Now try with subdirs
-  # TODO: do we really need this mess?
-  # TODO: another approach - grep sub-Makefiles for interesting goals.
-  for subdir in test tests testsuite example examples; do
-    for g in $test_goals all; do  # Note that we try 'all' as a last resort
-      if (test -d $subdir && test -f $subdir/Makefile && cd $subdir && build_goal $g); then
-        return
-      fi
-    done
-  done
-
-  echo >&2 "$(basename $0): don't know how to run tests in $PWD; here are the top-level goals:"
-  print_make_goals
-  $(dirname $0)/C10shell
+  if try_build_goals $test_goals; then
+    :
+  elif try_build_subdirs $test_goals all; then  # Note that we try 'all' as a last resort
+    # TODO: do we really need this mess?
+    # TODO: another approach - grep sub-Makefiles for interesting goals.
+    :
+  else
+    echo >&2 "$(basename $0): don't know how to run tests in $PWD; here are the top-level goals:"
+    print_make_goals
+    echo >&2 "And here is the directory contents:"
+    ls -R $ROOT >&2
+    $(dirname $0)/C10shell
+  fi
 elif test \( -f Build.PL -o -f Makefile.PL \) -a -x Build; then
   # Module::Build-style Perl package
   $TIMEOUT ./Build test || true
@@ -66,7 +81,7 @@ else
   # or languages (Lua e.g. teeworlds, Ruby e.g. bsfilter)
   # seem to be too rare to bother.
   echo >&2 "$(basename $0): don't know type of project in $PWD; here is the directory contents:"
-  ls -l >&2
+  ls -R $ROOT >&2
   $(dirname $0)/C10shell
 fi
 
