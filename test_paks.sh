@@ -26,6 +26,7 @@ sum() {
 SHARED_DIR=$PWD/pbuilder-shared
 REL=trusty  # Should match pbuilder's chroot
 PBUILDER=cowbuilder
+
 #SHELL_ON_ERROR=1
 #SHELL_ON_DONE=1
 
@@ -59,7 +60,7 @@ for p in $@; do
 
   # Skip large assets
   size=$(apt-cache show $p/$REL | grep ^Size: | awk '{print $2}' | sum)
-  if test $size -gt $(( 50 * 1024 * 1024 )); then
+  if test $size -gt $(( 128 * 1024 * 1024 )); then
     continue
   fi
 
