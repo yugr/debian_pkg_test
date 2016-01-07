@@ -42,6 +42,10 @@ $ ./test_paks.sh $(cat paks.lst)
 ```
 * after completion, detected errors will be stored in sortcheck.log
 
+You can customize behavior of test\_paks.sh with environment variables:
+* SHELL\_ON\_ERROR - drop to root shell on error
+* SHELL\_ON\_DONE - drop to root shell after build and test
+
 # Known issues
 
 This tool should be easily adaptable to other dynamic checkers
