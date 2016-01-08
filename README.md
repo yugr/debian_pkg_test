@@ -30,8 +30,7 @@ $ sudo apt-get update
 ```
 * setup cowbuilder chroot:
 ```
-$ echo "COMPONENTS='main universe multiverse restricted'" > $HOME/.pbuilderrc
-$ sudo cowbuilder --create --distribution trusty
+$ sudo cowbuilder --create --distribution trusty --components 'main universe multiverse restricted'
 $ sudo cowbuilder --login --distribution trusty --save-after-login
 # echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/02apt-speedup
 # cat > /etc/apt/source.list  # Copy contents of your host sources.list
@@ -39,12 +38,12 @@ $ sudo cowbuilder --login --distribution trusty --save-after-login
 # exit
 ```
 * copy SortChecker source code to pbuilder-shared
-* copy /usr/share/doc/pbuilder/examples/B20autopkgtest to hooks subdir (available since pbuilder 2.17)
+* (optional) copy /usr/share/doc/pbuilder/examples/B20autopkgtest to hooks subdir (can't include it directly due to incompatible license)
 * collect list of 500 source packages via
 ```
 $ ./list_paks.sh 500 > paks.lst
 ```
-* rather than checking some random packages, you could select the ones which are the most "interesting" programs e.g.
+* rather than checking random 500 packages, you could select the most interesting e.g.
   * media: ffmpeg gimp mesa freetype thunderbird evince opencv alsa-\* cairo libsdl2 pango1.0 tiff djvulibre
   * network: openssl nginx openvpn xbmc vsftpd curl openssh apache2 gnutls28
   * databases: mysql-5.5 mariadb-5.5 postgresql-common db5.3 sqlite3
@@ -90,6 +89,7 @@ system testsuites:
 * Autotest (http://autotest.readthedocs.org/en/latest/)
 
 Some additional info is available at
-* https://wiki.ubuntu.com/Testing/Automation/
-* http://zhigang.org/wiki/LinuxTesting
+* [Ubuntu Autotesting wiki](https://wiki.ubuntu.com/Testing/Automation/)
+* [How to test a Tizen PC distribution](https://wiki.tizen.org/wiki/How_to_test_a_Tizen_PC_or_Netbook_distribution)
+* [Linux testing wiki](http://zhigang.org/wiki/LinuxTesting)
 
