@@ -1,10 +1,11 @@
 # What's this?
 
-Debian-test is a set of simple scripts to apply SortChecker
-to arbitrary Debian package. The tool would
-build the package and run it's builtin testsuite (if any).
-All actions are run under SortChecker (dynamic checker of qsort calls)
-to detect qsort-related bugs.
+Debian-test is a set of simple scripts to test SortChecker
+(which itself is a simple dynamic checker of qsort usage)
+with arbitrary Debian packages.
+Debian-test builds package and runs it's builtin testsuites (if any).
+The system is instrumented with SortChecker to detect qsort-related bugs
+in the package code or bugs in SortChecker itself.
 
 Note that I only needed this tool for very pragmatic reasons
 so it's quick, dirty and probably not very well designed.
@@ -14,10 +15,12 @@ so it's quick, dirty and probably not very well designed.
 Before running the tool, setup your system:
 * (optional) register all package repos:
 ```
-$ for type in deb deb-src; do
-  for dist in trusty trusty-updates trusty-backports trusty-security; do
-    echo $type http://us.archive.ubuntu.com/ubuntu $dist main universe multiverse restricted
-  done
+$ SERVER=http://us.archive.ubuntu.com/ubuntu
+$ REL=trusty
+$ COMPONENTS='main universe multiverse restricted'
+$ for REPO in $REL $REL-updates $REL-backports $REL-security; do
+    echo deb $SERVER $REPO $COMPONENTS
+    echo deb-src $SERVER $REPO $COMPONENTS
   done | sudo tee /etc/apt/sources.list
 $ sudo apt-get update
 ```
@@ -41,6 +44,12 @@ $ sudo cowbuilder --login --distribution trusty --save-after-login
 ```
 $ ./list_paks.sh 500 > paks.lst
 ```
+* rather than checking some random packages, you could select the ones which are the most "interesting" programs e.g.
+  * media: ffmpeg gimp mesa freetype thunderbird evince opencv alsa-\* cairo libsdl2 pango1.0 tiff djvulibre
+  * network: openssl nginx openvpn xbmc vsftpd curl openssh apache2 gnutls28
+  * databases: mysql-5.5 mariadb-5.5 postgresql-common db5.3 sqlite3
+  * system: dbus samba gstreamer1.0 systemd
+  * interpreters: openjdk-6 ghc php5 perl python2.7 lua50 octave ocaml
 * finally run tests:
 ```
 $ ./test_paks.sh $(cat paks.lst)
@@ -62,5 +71,25 @@ Tool fails to run tests for many packages due to
 * non-standard makefile names (e.g. GNUmakefile in batmon.app, makefile in bcpp, Makefile.tests in xml2, etc.)
 * weird langs (Haskell, PHP, Ruby, etc.)
 * non-standard build system (e.g. SCons in balder2d, waf in sushi, shell scripts in bomstrip, etc.)
-Still 70% of packages are testable on average.
+Still 50% of packages are testable on average.
+
+[Debian package rating](http://popcon.debian.org/by_vote)
+may be useful to prioritize packages for testing.
+
+# Other approaches
+
+Debian packages provide a huge supply of automated tests but
+seem to test only basic functionality and thus do not uncover too many errors
+(I've mined just 3 bugs out of ~1000 runs).
+
+It may be that system-level automated tests could achieve
+much better coverage and bugcount. Here's a list of popular
+system testsuites:
+* Phoronix (http://www.phoronix-test-suite.com)
+* LDTP (http://ldtp.freedesktop.org)
+* Autotest (http://autotest.readthedocs.org/en/latest/)
+
+Some additional info is available at
+* https://wiki.ubuntu.com/Testing/Automation/
+* http://zhigang.org/wiki/LinuxTesting
 
