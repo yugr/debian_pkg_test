@@ -12,6 +12,15 @@ so it's quick, dirty and probably not very well designed.
 # How to run
 
 Before running the tool, setup your system:
+* (optional) register all package repos:
+```
+$ for type in deb deb-src; do
+  for dist in trusty trusty-updates trusty-backports trusty-security; do
+    echo $type http://us.archive.ubuntu.com/ubuntu $dist main universe multiverse restricted
+  done
+  done | sudo tee /etc/apt/sources.list
+$ sudo apt-get update
+```
 * install pbuilder and cowbuilder and add them to sudoers:
 ```
 %username% ALL=(ALL) NOPASSWD: /usr/sbin/pbuilder
@@ -20,13 +29,9 @@ Before running the tool, setup your system:
 ```
 $ echo "COMPONENTS='main universe multiverse restricted'" > $HOME/.pbuilderrc
 $ sudo cowbuilder --create --distribution trusty
-$ sudo cowbuilder --update --distribution trusty
+$ sudo cowbuilder --login --distribution trusty --save-after-login
 # echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/02apt-speedup
-# for type in deb deb-src; do
-  for dist in trusty trusty-updates trusty-backports trusty-security; do
-    echo "$type http://us.archive.ubuntu.com/ubuntu $dist main universe multiverse restricted
-  done
-  done > /etc/apt/sources.list
+# cat > /etc/apt/source.list  # Copy contents of your host sources.list
 # apt-get update
 # exit
 ```
