@@ -70,6 +70,7 @@ Tool fails to run tests for many packages due to
 * non-standard makefile names (e.g. GNUmakefile in batmon.app, makefile in bcpp, Makefile.tests in xml2, etc.)
 * weird langs (Haskell, PHP, Ruby, etc.)
 * non-standard build system (e.g. SCons in balder2d, waf in sushi, shell scripts in bomstrip, etc.)
+
 Still 50% of packages are testable on average.
 
 [Debian package rating](http://popcon.debian.org/by_vote)
