@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# Copyright 2015-2016 Yury Gribov
+# 
+# Use of this source code is governed by MIT license that can be
+# found in the LICENSE.txt file.
+
 # Simple hacky script to apply SortChecker to arbitrary Debian packages.
 # Run as
 #   test.sh pak1 pak2...

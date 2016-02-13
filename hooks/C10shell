@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# Copyright 2015-2016 Yury Gribov
+# 
+# Use of this source code is governed by MIT license that can be
+# found in the LICENSE.txt file.
+
 if test -n "$SHELL_ON_ERROR"; then
   echo "Running shell on error"
   $(dirname $0)/run-shell
