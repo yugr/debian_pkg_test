@@ -49,6 +49,9 @@ $ ./list_paks.sh 500 > paks.lst
   * databases: mysql-5.5 mariadb-5.5 postgresql-common db5.3 sqlite3
   * system: dbus samba gstreamer1.0 systemd
   * interpreters: openjdk-6 ghc php5 perl python2.7 lua50 octave ocaml
+* another option is to stand on shoulders of existing verification tools and take package list
+  from [AFL](http://lcamtuf.coredump.cx/afl/#bugs), [ASan](https://github.com/google/sanitizers/wiki/AddressSanitizerFoundBugs)
+  or [Fuzzing project](https://blog.fuzzing-project.org/).
 * finally run tests:
 ```
 $ ./test_paks.sh $(cat paks.lst)
