@@ -1,12 +1,9 @@
-#!/bin/sh
+#!/bin/sh -ex
 
-# Copyright 2015-2016 Yury Gribov
+# Copyright 2015-2017 Yury Gribov
 # 
 # Use of this source code is governed by MIT license that can be
 # found in the LICENSE.txt file.
-
-set -e
-set -x
 
 TIMEOUT='timeout -k 1m 20m'
 
@@ -90,8 +87,14 @@ else
   $(dirname $0)/C10shell
 fi
 
-if test -n "$SHELL_ON_DONE"; then
+# Allow analyzer to copy additional outputs
+if test -n "${ENABLE_CHECKS:-}" -a -x $SHARED_DIR/hooks/finish; then
+  $SHARED_DIR/hooks/finish
+fi
+
+if test -n "$SHELL_ON_FINISH"; then
   echo "$(basename $0): build and test done, running shell"
+  cd /tmp/buildd/*/debian/..
   $(dirname $0)/run-shell
 fi
 

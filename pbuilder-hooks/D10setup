@@ -1,0 +1,16 @@
+#!/bin/sh -ex
+
+# Copyright 2015-2017 Yury Gribov
+# 
+# Use of this source code is governed by MIT license that can be
+# found in the LICENSE.txt file.
+
+# Allow analyzer to do additional work at start
+if test -n "${ENABLE_CHECKS:-}" -a -x $SHARED_DIR/hooks/start; then
+  $SHARED_DIR/hooks/start
+fi
+
+if test -n "$SHELL_ON_START"; then
+  echo "$(basename $0): prepared environment for build, running shell"
+  $(dirname $0)/run-shell
+fi

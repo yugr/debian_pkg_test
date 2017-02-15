@@ -1,0 +1,42 @@
+#!/bin/sh -eu
+
+# Copyright 2017 Yury Gribov
+# 
+# Use of this source code is governed by MIT license that can be
+# found in the LICENSE.txt file.
+
+# Usage: get_source_pkg PKG...
+# Map Debian packages to their source packages.
+
+REL=$(grep DISTRIB_CODENAME /etc/lsb-release | sed 's/.*=//')
+
+is_good_package() {
+  # Skip virtual packages
+  if apt-cache show $1/$REL 2>&1 | grep -q 'No packages found'; then
+    return 1
+  fi
+
+  # Skip packages which are not present in our distro
+  if apt-cache madison $1 | grep -q 'Unable to locate package'; then
+    return 1
+  fi
+
+  # Skip packages for which sources are missing in Trusty
+  if ! apt-cache madison $1 | grep -q $REL; then
+    return 1
+  fi
+
+  return 0
+}
+
+for p in $@; do
+  src=$(apt-cache show $p/$REL 2>/dev/null | grep Source: | awk '{print $2}')
+  # TODO: showsrc
+  if test -z "$src"; then
+    src=$p
+  fi
+
+  if is_good_package $src; then
+    echo $src
+  fi
+done

@@ -1,12 +1,9 @@
-#!/bin/sh
+#!/bin/sh -ex
 
-# Copyright 2015-2016 Yury Gribov
+# Copyright 2015-2017 Yury Gribov
 # 
 # Use of this source code is governed by MIT license that can be
 # found in the LICENSE.txt file.
 
-set -e
-
 apt-get install -y --force-yes vim less bash gdb
-cd /tmp/buildd/*/debian/..
 /bin/bash < /dev/tty > /dev/tty 2> /dev/tty

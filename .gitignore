@@ -1,5 +1,7 @@
 pbuilder-shared/*
-hooks/B*autopkgtest
+pbuilder-hooks/B*autopkgtest
 pbuilderrc
 sortcheck.log
 src
+test_pkgs.[0-9]*
+*.lst

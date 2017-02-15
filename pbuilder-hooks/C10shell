@@ -1,11 +1,12 @@
-#!/bin/sh
+#!/bin/sh -ex
 
-# Copyright 2015-2016 Yury Gribov
+# Copyright 2015-2017 Yury Gribov
 # 
 # Use of this source code is governed by MIT license that can be
 # found in the LICENSE.txt file.
 
 if test -n "$SHELL_ON_ERROR"; then
   echo "Running shell on error"
+  cd /tmp/buildd/*/debian/..
   $(dirname $0)/run-shell
 fi

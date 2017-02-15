@@ -1,0 +1,24 @@
+#!/bin/sh -eu
+
+# Copyright 2017 Yury Gribov
+# 
+# Use of this source code is governed by MIT license that can be
+# found in the LICENSE.txt file.
+
+# Usage: is_c_pkg PKG
+# Check if package contains C files.
+
+TMP=$(mktemp -d)
+trap "rm -rf $TMP" EXIT
+
+REL=$(grep DISTRIB_CODENAME /etc/lsb-release | sed 's/.*=//')
+
+if ! (cd $TMP && rm -rf * && timeout 60 apt-get source $1/$REL > /dev/null 2>&1); then
+  return 1
+fi
+
+if test $(find $TMP -name \*.c -o -name \*.cpp -o -name \*.cxx -o -name \*.C -o -name \*.cc | wc -l) = 0; then
+  return 1
+fi
+
+return 0

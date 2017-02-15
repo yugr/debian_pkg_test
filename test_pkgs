@@ -1,0 +1,193 @@
+#!/bin/sh -eux
+
+# Copyright 2015-2017 Yury Gribov
+# 
+# Use of this source code is governed by MIT license that can be
+# found in the LICENSE.txt file.
+
+# Hacky script to apply SortChecker to arbitrary Debian packages.
+# Run as
+#   test_pkgs pak1 pak2...
+
+error() {
+  echo >&2 "$(basename $0): error: $@"
+  exit 1
+}
+
+warn() {
+  echo >&2 "$(basename $0): warning: $@"
+}
+
+sum() {
+  res=0
+  while read x; do
+    res=$((res + x))
+  done
+  echo $res
+}
+
+tic() {
+  tstart=$(date +%s)
+}
+
+toc() {
+  local tend
+  tend=$(date +%s)
+  echo $((tend - tstart))
+}
+
+SHARED_DIR=$PWD/pbuilder-shared
+REL=$(grep DISTRIB_CODENAME /etc/lsb-release | sed 's/.*=//')  # Should match pbuilder's chroot!
+PBUILDER=cowbuilder
+
+print_help_and_exit() {
+  cat <<EOF
+$(basename) [OPT] PKG...
+Build and run tests for Debian packages.
+
+Available options:
+  --shell-on-error   Drop to interactive shell on error.
+  --shell-on-start   Drop to interactive shell before build.
+  --shell-on-finish  Drop to interactive shell on completion.
+  --disable-hooks    Do not run hooks in pbuild-shared.
+  -h, --help         Print this message and exit.
+EOF
+  exit
+}
+
+error() {
+  echo >&2 "$(basename $0): error: $@"
+  exit 1
+}
+
+TEMP=$(getopt -o 'h' --long 'help,disable-hooks,shell-on-start,shell-on-finish,shell-on-error' -n $(basename $0) -- "$@")
+eval set -- "$TEMP"
+
+ENABLE_CHECKS=1
+while true; do
+  case "$1" in
+    --shell-on-start)
+      SHELL_ON_START=1
+      shift
+      ;;
+    --shell-on-finish)
+      SHELL_ON_FINISH=1
+      shift
+      ;;
+    --shell-on-error)
+      SHELL_ON_ERROR=1
+      shift
+      ;;
+    --disable-hooks)
+      ENABLE_CHECKS=
+      shift
+      ;;
+    -h | --help)
+      print_help_and_exit
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -*)
+      error "unknown option: $1"
+      ;;
+    *)
+      error 'internal error'
+      ;;
+  esac
+done
+
+if test $# -eq 0; then
+  error "no packages specified"
+fi
+
+tic
+
+# Do not hang VM...
+ulimit -S -v $((512*1024))
+
+if ! test -f pbuilder-hooks/B*autopkgtest; then
+  warn "it's recommended to install B92autopkgtest (available in pbuilder since 2.17)"
+fi
+
+mkdir -p src $SHARED_DIR
+rm -rf src/*
+
+cat <<EOF > pbuilderrc
+export COMPONENTS='main universe multiverse restricted'
+export SHARED_DIR=$SHARED_DIR
+export SHELL_ON_START=${SHELL_ON_START:-}
+export SHELL_ON_FINISH=${SHELL_ON_FINISH:-}
+export SHELL_ON_ERROR=${SHELL_ON_ERROR:-}
+export ENABLE_CHECKS=${ENABLE_CHECKS:-}
+EOF
+
+if test -n "${ENABLE_CHECKS:-}" -a -x $SHARED_DIR/hooks/env; then
+  $SHARED_DIR/hooks/env >> pbuilderrc
+fi
+
+# Generate name of output dir
+idx=1
+for d in test_pkgs.[0-9]*; do
+  test -d $d || continue
+  d_idx=$(echo $d | sed 's/^test_pkgs\.//')
+  if test $idx -le $d_idx; then
+    idx=$((d_idx + 1))
+  fi
+done
+ODIR=test_pkgs.$idx
+
+mkdir -p $ODIR
+date > $ODIR/stamp
+
+N=$#
+I=0
+NFAILS=0
+for p in $@; do
+  I=$((I+1))
+  echo "TESTING PACKAGE $p ($I/$N)"
+
+  # Workaround for network shutdown on Ubuntu
+  if ! ping -c5 us.archive.ubuntu.com >/dev/null 2>&1; then
+    #sudo service networking restart
+    sudo service network-manager restart
+  fi
+
+  # Skip large assets
+  size=$(apt-cache show $p/$REL | grep ^Size: | awk '{print $2}' | sum)
+  if test $size -gt $(( 128 * 1024 * 1024 )); then
+    continue
+  fi
+
+  if ! (cd src && apt-get source $p/$REL); then
+    # May be caused by changes on server so don't die
+    warn "failed to download package $p"
+    continue
+  fi
+
+  if ! ls src | grep -q '\.dsc'; then
+    error "no .dsc file in package $p"
+  fi
+
+  if test -d $ODIR/$p; then
+    continue
+  fi
+
+  mkdir $ODIR/$p
+
+  if ! nice sudo $PBUILDER --build --configfile pbuilderrc --hookdir pbuilder-hooks --bindmounts $SHARED_DIR src/*.dsc 2>&1 | tee $ODIR/$p/stdout_stderr.txt; then
+    warn "failed to build package $p"
+    NFAILS=$((NFAILS + 1))
+  fi
+
+  cp -r $SHARED_DIR/output $ODIR/$p
+
+  rm -rf src/* $SHARED_DIR/output/*
+done
+
+t=$(toc)
+t=$((100 * t / 60 / 60))
+t=$(echo $t | sed 's/..$/.&/')
+
+echo "Built $N packages in $t hours ($NFAILS failed)"
