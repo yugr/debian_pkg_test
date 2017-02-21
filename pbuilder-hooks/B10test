@@ -87,14 +87,3 @@ else
   $(dirname $0)/C10shell
 fi
 
-# Allow analyzer to copy additional outputs
-if test -n "${ENABLE_CHECKS:-}" -a -x $SHARED_DIR/hooks/finish; then
-  $SHARED_DIR/hooks/finish
-fi
-
-if test -n "$SHELL_ON_FINISH"; then
-  echo "$(basename $0): build and test done, running shell"
-  cd /tmp/buildd/*/debian/..
-  $(dirname $0)/run-shell
-fi
-
