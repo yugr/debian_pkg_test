@@ -63,7 +63,7 @@ error() {
 TEMP=$(getopt -o 'h' --long 'help,disable-hooks,shell-on-start,shell-on-finish,shell-on-error' -n $(basename $0) -- "$@")
 eval set -- "$TEMP"
 
-ENABLE_CHECKS=1
+ENABLE_HOOKS=1
 while true; do
   case "$1" in
     --shell-on-start)
@@ -79,7 +79,7 @@ while true; do
       shift
       ;;
     --disable-hooks)
-      ENABLE_CHECKS=
+      ENABLE_HOOKS=
       shift
       ;;
     -h | --help)
@@ -122,10 +122,10 @@ export SHARED_DIR=$SHARED_DIR
 export SHELL_ON_START=${SHELL_ON_START:-}
 export SHELL_ON_FINISH=${SHELL_ON_FINISH:-}
 export SHELL_ON_ERROR=${SHELL_ON_ERROR:-}
-export ENABLE_CHECKS=${ENABLE_CHECKS:-}
+export ENABLE_HOOKS=${ENABLE_HOOKS:-}
 EOF
 
-if test -n "${ENABLE_CHECKS:-}" -a -x $SHARED_DIR/hooks/env; then
+if test -n "${ENABLE_HOOKS:-}" -a -x $SHARED_DIR/hooks/env; then
   $SHARED_DIR/hooks/env >> pbuilderrc
 fi
 

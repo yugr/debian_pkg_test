@@ -6,7 +6,7 @@
 # found in the LICENSE.txt file.
 
 # Allow analyzer to do additional work at start
-if test -n "${ENABLE_CHECKS:-}" -a -x $SHARED_DIR/hooks/start; then
+if test -n "${ENABLE_HOOKS:-}" -a -x $SHARED_DIR/hooks/start; then
   $SHARED_DIR/hooks/start
 fi
 
