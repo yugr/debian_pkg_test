@@ -116,6 +116,8 @@ rm -rf src/*
 
 cat <<EOF > pbuilderrc
 export COMPONENTS='main universe multiverse restricted'
+export V=1
+export VERBOSE=1
 export SHARED_DIR=$SHARED_DIR
 export SHELL_ON_START=${SHELL_ON_START:-}
 export SHELL_ON_FINISH=${SHELL_ON_FINISH:-}
