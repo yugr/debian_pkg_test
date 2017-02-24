@@ -150,6 +150,11 @@ for p in $@; do
   I=$((I+1))
   echo "TESTING PACKAGE $p ($I/$N)"
 
+  if test -d $ODIR/$p; then
+    warn "$p already tested"
+    continue
+  fi
+
   # Workaround for network shutdown on Ubuntu
   if ! ping -c5 us.archive.ubuntu.com >/dev/null 2>&1; then
     #sudo service networking restart
@@ -170,10 +175,6 @@ for p in $@; do
 
   if ! ls src | grep -q '\.dsc'; then
     error "no .dsc file in package $p"
-  fi
-
-  if test -d $ODIR/$p; then
-    continue
   fi
 
   mkdir $ODIR/$p
