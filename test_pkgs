@@ -178,6 +178,7 @@ for p in $@; do
 
   mkdir $ODIR/$p
 
+  # TODO: use '--timeout 1h' when https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=855999 is fixed
   if ! nice sudo $PBUILDER --build --configfile pbuilderrc --hookdir pbuilder-hooks --bindmounts $SHARED_DIR src/*.dsc 2>&1 | tee $ODIR/$p/stdout_stderr.txt; then
     warn "failed to build package $p"
     NFAILS=$((NFAILS + 1))
