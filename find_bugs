@@ -9,7 +9,7 @@
 # Finds "interesting" messages in pbuilder logs.
 
 # TODO: make signals case-sensitive?
-GOOD_RE='Segmentation fault|Bus error|Illegal instruction\|Abort\|Terminated\|Killed\|\<SEGV\>\|\<TRAP\|ABORT\|assertion\|error:\|failed'
+GOOD_RE='Segmentation fault|Bus error|Illegal instruction\|Abort\|Terminated\|Killed\|\<SEGV\>\|\<TRAP\|ABORT\|assertion\|error:\|failed\|segfault'
 BAD_RE='failed to verify signature'
 
 cd $1
