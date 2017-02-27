@@ -191,7 +191,6 @@ for p in $@; do
 done
 
 t=$(toc)
-t=$((100 * t / 60 / 60))
-t=$(echo $t | sed 's/..$/.&/')
+t=$(echo "scale=2; $t / 60 / 60" | bc)
 
 echo "Built $N packages in $t hours ($NFAILS failed)"
