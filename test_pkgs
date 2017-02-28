@@ -50,6 +50,7 @@ Available options:
   --shell-on-start   Drop to interactive shell before build.
   --shell-on-finish  Drop to interactive shell on completion.
   --disable-hooks    Do not run hooks in pbuild-shared.
+  --disable-timeout  Do not abort build on timeout (for manual debug).
   -h, --help         Print this message and exit.
 EOF
   exit
@@ -60,10 +61,11 @@ error() {
   exit 1
 }
 
-TEMP=$(getopt -o 'h' --long 'help,disable-hooks,shell-on-start,shell-on-finish,shell-on-error' -n $(basename $0) -- "$@")
+TEMP=$(getopt -o 'h' --long 'help,disable-hooks,shell-on-start,shell-on-finish,shell-on-error,disable-timeout' -n $(basename $0) -- "$@")
 eval set -- "$TEMP"
 
 ENABLE_HOOKS=1
+TO='--timeout 1h'
 while true; do
   case "$1" in
     --shell-on-start)
@@ -80,6 +82,10 @@ while true; do
       ;;
     --disable-hooks)
       ENABLE_HOOKS=
+      shift
+      ;;
+    --disable-timeout)
+      TO=
       shift
       ;;
     -h | --help)
@@ -183,7 +189,7 @@ for p in $@; do
 
   start_time=$(date +'%F %T')
 
-  ( nice sudo $PBUILDER --timeout 1h --build --configfile pbuilderrc --hookdir pbuilder-hooks --bindmounts $SHARED_DIR src/*.dsc >$ODIR/$p/stdout_stderr.txt 2>&1 ) &
+  ( nice sudo $PBUILDER $TO --build --configfile pbuilderrc --hookdir pbuilder-hooks --bindmounts $SHARED_DIR src/*.dsc >$ODIR/$p/stdout_stderr.txt 2>&1 ) &
   BUILD_PID=$!
 
   sleep 1
