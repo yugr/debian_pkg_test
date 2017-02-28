@@ -6,7 +6,7 @@ and dynamic) is testing them on a sufficiently large codebase.
 Debian-package-test is a set of simple scripts that simplify
 application of code analysis tools to arbitrary Debian packages.
 It was originally developed for testing [SortChecker](https://github.com/yugr/sortcheck)
-and StackRandomizer (to be published).
+and [StackWipe](https://github.com/yugr/StackWipe).
 
 Debian-package-test is built on top of standard Debian build tools (pbuilder
 et al.). It builds package and runs it's builtin testsuites, if any.
@@ -55,10 +55,10 @@ $ sudo cowbuilder --login --distribution $REL --bindmounts pbuilder-shared --sav
 ```
 * do tool-specific setup; this usually means installing prerequisites and
   building/installing necessary files inside the chroot; e.g. for
-  StackRandomizer:
+  StackWipe:
 ```
 # apt-get install python
-# cd /path/to/pbuilder-shared/StackRandomizer
+# cd /path/to/pbuilder-shared/StackWipe
 # make clean all
 ```
 * add tool-specific hooks in pbuilder-shared/hooks
@@ -71,12 +71,12 @@ There are three types of hooks:
 * completion hook `pbuilder-shared/hooks/finish` (this may print additional output to console
   or copy necessary files to pbuilder-shared/output folder)
 
-Here are StackRandomizer hooks:
+Here are StackWipe hooks:
 ```
 $ cat pbuilder-shared/hooks/env
 #!/bin/sh -eu
 
-# Forward all StackRandomizer variables to chroot
+# Forward all StackWipe variables to chroot
 for var in $(set | grep '^RAN\w\+=' | cut -d= -f1); do
   echo $(eval "echo $var")
 done
@@ -91,7 +91,7 @@ echo 'export VERBOSE=1'
 # * some projects simply ignore CC/CXX
 # * some treat them differently from GCC
 #   (e.g. blt project compilation fails under CC=rancc)
-echo 'export PATH=$SHARED_DIR/StackRandomizer/out/fake-gcc:$PATH'
+echo 'export PATH=$SHARED_DIR/StackWipe/out/fake-gcc:$PATH'
 
 # Do not print warnings to stderr as this may puzzle build system
 echo 'export RANCC_OUTPUT=$SHARED_DIR/output/warns.log'$ cat pbuilder-shared/hooks/start
@@ -107,13 +107,13 @@ done
 touch $SHARED_DIR/output/warns.log
 chmod a+w $SHARED_DIR/output/warns.log
 
-echo "StackRandomizer: GCC intercepted successfully"
+echo "StackWipe: GCC intercepted successfully"
 ```
 and here are SortChecker's ones:
 ```
 $ cat pbuilder-shared/hooks/env
 #!/bin/sh -eu
-# This will override default gcc and g++ with StackRandomizer's ones
+# This will override default gcc and g++ with StackWipe's ones
 echo 'export SORTCHECK_OPTIONS=print_to_file=$SHARED_DIR/output/sortcheck.log'
 
 $ cat pbuilder-shared/hooks/start
@@ -176,7 +176,7 @@ Filtering, deduplicating and interpreting results are too specific per tool
 so must be done by the user.
 
 E.g. in case of SortCheck you can simply apply `sort -u` to all
-collected `sortcheck.log`'s. StackRandomizer does not emit it's own error messages
+collected `sortcheck.log`'s. StackWipe does not emit it's own error messages
 but rather provokes abnormal behavior in application
 so you need to mine "interesting" messages yourself e.g. by manually filtering
 output of
