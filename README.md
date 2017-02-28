@@ -71,61 +71,12 @@ There are three types of hooks:
 * completion hook `pbuilder-shared/hooks/finish` (this may print additional output to console
   or copy necessary files to pbuilder-shared/output folder)
 
-Here are StackWipe hooks:
-```
-$ cat pbuilder-shared/hooks/env
-#!/bin/sh -eu
-
-# Forward all StackWipe variables to chroot
-for var in $(set | grep '^RAN\w\+=' | cut -d= -f1); do
-  echo $(eval "echo $var")
-done
-
-# This is useful for debugging
-echo 'export V=1'
-echo 'export VERBOSE=1'
-
-# We can either intercept CC/CXX environment variables
-# or deceive the system by overring GCC with a "fake" wrapper.
-# The second approach is ugly but more efficient:
-# * some projects simply ignore CC/CXX
-# * some treat them differently from GCC
-#   (e.g. blt project compilation fails under CC=rancc)
-echo 'export PATH=$SHARED_DIR/StackWipe/out/fake-gcc:$PATH'
-
-# Do not print warnings to stderr as this may puzzle build system
-echo 'export RANCC_OUTPUT=$SHARED_DIR/output/warns.log'$ cat pbuilder-shared/hooks/start
-#!/bin/sh -e
-
-# Verify basic functionality
-for CC in gcc x86_64-linux-gnu-gcc; do
-  echo 'int main() { return 0; }' > /tmp/$$.c
-  RANCC_VERBOSE=1 $CC /tmp/$$.c 2>&1 | grep -q 'initial args:'
-done
-
-# Create file for warnings with appropriate perms
-touch $SHARED_DIR/output/warns.log
-chmod a+w $SHARED_DIR/output/warns.log
-
-echo "StackWipe: GCC intercepted successfully"
-```
-and here are SortChecker's ones:
-```
-$ cat pbuilder-shared/hooks/env
-#!/bin/sh -eu
-# This will override default gcc and g++ with StackWipe's ones
-echo 'export SORTCHECK_OPTIONS=print_to_file=$SHARED_DIR/output/sortcheck.log'
-
-$ cat pbuilder-shared/hooks/start
-# LD_PRELOAD will not work for setuids
-# echo /pbuilder-shared/SortCheck/bin/libsortcheck.so >> /etc/ld.so.preload
-```
+Example hooks are in `examples/` folder.
 
 TODO:
 * explain pbuilder-shared
 * explain `--disable-hooks`
 * provide instructions for sanitizers
-* update SR's hooks
 
 # Finding targets
 
@@ -181,7 +132,7 @@ but rather provokes abnormal behavior in application
 so you need to mine "interesting" messages yourself e.g. by manually filtering
 output of
 ```
-$ grep -riE 'Segmentation fault|Bus error|Illegal instruction|Abort|Terminated|Killed|\<SEGV\>|\<TRAP|Assertion|error:|failed' test_pkgs.3
+$ ./find_bugs path/to/logs
 ```
 
 # Known issues

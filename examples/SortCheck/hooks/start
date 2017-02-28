@@ -1,0 +1,2 @@
+# LD_PRELOAD will not work for setuids
+# echo /pbuilder-shared/SortCheck/bin/libsortcheck.so >> /etc/ld.so.preload

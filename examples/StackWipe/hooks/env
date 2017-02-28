@@ -1,0 +1,17 @@
+#!/bin/sh -eu
+
+# Forward all StackRandomizer variables to chroot
+for var in $(set | grep '^RAN\w\+=' | cut -d= -f1); do
+  echo $(eval "echo $var")
+done
+
+# We can either intercept CC/CXX environment variables
+# or deceive the system by overring GCC with a "fake" wrapper.
+# The second approach is ugly but more efficient:
+# * some projects simply ignore CC/CXX
+# * some treat them differently from GCC
+#   (e.g. blt project compilation fails under CC=rancc)
+echo 'export PATH=$SHARED_DIR/StackRandomizer/out/fake-gcc:$PATH'
+
+# Do not print warnings to stderr as this may puzzle build system
+echo 'export RANCC_OUTPUT=$SHARED_DIR/output/warns.log'

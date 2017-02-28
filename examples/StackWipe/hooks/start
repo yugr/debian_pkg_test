@@ -1,0 +1,15 @@
+#!/bin/sh -eux
+
+# Verify basic functionality
+for CC in gcc x86_64-linux-gnu-gcc; do
+  which $CC | grep fake-gcc
+  echo 'int main() { return 0; }' > /tmp/$$.c
+  RANCC_VERBOSE=1 RANCC_OUTPUT=/tmp/$$.log $CC /tmp/$$.c
+  grep -q 'initial args:' /tmp/$$.log
+done
+
+# Create file for warnings with appropriate perms
+touch $SHARED_DIR/output/warns.log
+chmod a+w $SHARED_DIR/output/warns.log
+
+echo "StackRandomizer: GCC intercepted successfully"
