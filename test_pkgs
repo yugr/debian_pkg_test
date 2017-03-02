@@ -42,7 +42,7 @@ PBUILDER=cowbuilder
 
 print_help_and_exit() {
   cat <<EOF
-$(basename) [OPT] PKG...
+$(basename $0) [OPT] PKG...
 Build and run tests for Debian packages.
 
 Available options:
@@ -51,6 +51,8 @@ Available options:
   --shell-on-finish  Drop to interactive shell on completion.
   --disable-hooks    Do not run hooks in pbuild-shared.
   --disable-timeout  Do not abort build on timeout (for manual debug).
+  --timeout TO       Specify timeout for package build (TO has std.
+                     duration syntax [0-9]*[hms] e.g. 100m or 1h).
   -h, --help         Print this message and exit.
 EOF
   exit
@@ -61,11 +63,11 @@ error() {
   exit 1
 }
 
-TEMP=$(getopt -o 'h' --long 'help,disable-hooks,shell-on-start,shell-on-finish,shell-on-error,disable-timeout' -n $(basename $0) -- "$@")
+TEMP=$(getopt -o 'ht:' --long 'help,disable-hooks,shell-on-start,shell-on-finish,shell-on-error,disable-timeout,timeout' -n $(basename $0) -- "$@")
 eval set -- "$TEMP"
 
 ENABLE_HOOKS=1
-TO='--timeout 1h'
+TO='--timeout 2h'
 while true; do
   case "$1" in
     --shell-on-start)
@@ -87,6 +89,10 @@ while true; do
     --disable-timeout)
       TO=
       shift
+      ;;
+    --timeout | -t)
+      TO="--timeout $2"
+      shift 2
       ;;
     -h | --help)
       print_help_and_exit
