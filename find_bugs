@@ -10,7 +10,7 @@
 
 # TODO: make signals case-sensitive?
 GOOD_RE='Segmentation fault\|Bus error\|Illegal instruction\|Abort\|Terminated\|Killed\|\<SEGV\>\|\<TRAP\|ABORT\|assertion\|error:\|failed\|segfault'
-BAD_RE='failed to verify signature'
+BAD_RE='failed to verify signature\|Terminated.*sleep'
 
 cd $1
 grep -ri "$GOOD_RE" . | grep -v "$BAD_RE"
