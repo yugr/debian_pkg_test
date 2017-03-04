@@ -1,2 +1,8 @@
+#!/bin/sh -eu
+
+LIB=/pbuilder-shared/SortCheck/bin/libsortcheck.so
+test -x $LIB
+! LD_PRELOAD=$LIB ls 2>&1 | grep -q ERROR
+
 # LD_PRELOAD will not work for setuids
-# echo /pbuilder-shared/SortCheck/bin/libsortcheck.so >> /etc/ld.so.preload
+echo $LIB >> /etc/ld.so.preload

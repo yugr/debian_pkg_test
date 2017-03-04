@@ -53,8 +53,8 @@ $ sudo cowbuilder --login --distribution $REL --bindmounts pbuilder-shared --sav
   ...  # Copy contents of your host sources.list
 # apt-get update
 ```
-* do tool-specific setup; this usually means installing prerequisites and
-  building/installing necessary files inside the chroot; e.g. for
+* do tool-specific setup; this usually means installing prerequisites, making folder
+  for logs, building/installing necessary files inside the chroot; e.g. for
   StackWipe:
 ```
 # apt-get install python

@@ -1,3 +1,2 @@
 #!/bin/sh -eu
-# This will override default gcc and g++ with StackWipe's ones
 echo 'export SORTCHECK_OPTIONS=print_to_file=$SHARED_DIR/output/sortcheck.log'
