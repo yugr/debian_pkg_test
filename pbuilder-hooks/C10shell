@@ -5,6 +5,11 @@
 # Use of this source code is governed by MIT license that can be
 # found in the LICENSE.txt file.
 
+# Allow analyzer to copy additional outputs
+if test -n "${ENABLE_HOOKS:-}" -a -x $SHARED_DIR/hooks/finish; then
+  $SHARED_DIR/hooks/finish
+fi
+
 if test -n "$SHELL_ON_ERROR"; then
   echo "Running shell on error"
   cd /tmp/buildd/*/debian/..
