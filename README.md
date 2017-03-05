@@ -42,16 +42,20 @@ $ sudo cowbuilder --create --distribution $REL --components 'main universe multi
 * copy /usr/share/doc/pbuilder/examples/B20autopkgtest to pbuilder-hooks
   subdir (can't include it directly due to incompatible license)
 $ sudo cowbuilder --login --distribution $REL --bindmounts pbuilder-shared --save-after-login
+# cat > /etc/apt/sources.list
+  ...  # Copy contents of your host sources.list
+# apt-get upgrade
+# apt-get update
+# # Install packages for debugging errors inside chroot
+# apt-get install vim gdb
+# # Turn off synches on every dpkg write to speed things up
 # echo force-unsafe-io > /etc/dpkg/dpkg.cfg.d/02apt-speedup
+# # Turn off man updates to speed up package installation
+# echo 'man-db man-db/auto-update boolean false' | debconf-set-selections
 # # Avoid gpg (used by adt-run) stalling machine due to lack of entropy
 # apt-get install -y --force-yes rng-tools
 # rngd -b -r /dev/urandom
-# apt-get upgrade
-# # Turn off man updates to speed up package installation
-# echo 'man-db man-db/auto-update boolean false' | debconf-set-selections
-# cat > /etc/apt/sources.list
-  ...  # Copy contents of your host sources.list
-# apt-get update
+# exit
 ```
 * do tool-specific setup; this usually means installing prerequisites, making folder
   for logs, building/installing necessary files inside the chroot; e.g. for
@@ -69,18 +73,19 @@ There are three types of hooks:
 * startup hook `pbuilder-shared/hooks/start` (this usually contains a quick smoke test of
   tools functionality e.g. that it detects some standard error)
 * completion hook `pbuilder-shared/hooks/finish` (this may print additional output to console
-  or copy necessary files to pbuilder-shared/output folder)
+  or copy necessary files to pbuilder-shared/output folder); note that this hook will
+  be called both for successful and failed build
 
 Example hooks are in `examples/` folder.
 
 TODO:
 * explain pbuilder-shared
-* explain `--disable-hooks`
+* provide instructions for Valgrind
 * provide instructions for sanitizers
 
 # Finding targets
 
-Once you're setup, you'd want to create a list of packages that you want to run your tool on.
+Once set up, you'd want to find packages to run your tool on.
 
 Here's a short list of security-critical software in modern Linux
 (loosely based on bug reports in existing analyzers like [AFL](http://lcamtuf.coredump.cx/afl/#bugs),
@@ -117,9 +122,6 @@ Results will be stored in `test_pkgs.$NUM` for further analysis.
 
 `test_pkgs` can be customized with various cmdline options
 (mainly for debugging errors), see `test_pkgs -h` for details.
-
-TODO
-* rerun build without tool on failure (to verify that tool caused it)
 
 # Analyzing results
 
