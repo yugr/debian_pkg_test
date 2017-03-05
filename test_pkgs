@@ -53,6 +53,7 @@ Available options:
   --disable-timeout  Do not abort build on timeout (for manual debug).
   --timeout TO       Specify timeout for package build (TO has std.
                      duration syntax [0-9]*[hms] e.g. 100m or 1h).
+  --pbuilder-opts O  Forward options to pbuilder/cowbuilder.
   -h, --help         Print this message and exit.
 EOF
   exit
@@ -63,11 +64,12 @@ error() {
   exit 1
 }
 
-TEMP=$(getopt -o 'ht:' --long 'help,disable-hooks,shell-on-start,shell-on-finish,shell-on-error,disable-timeout,timeout' -n $(basename $0) -- "$@")
+TEMP=$(getopt -o 'ht:' --long 'help,disable-hooks,shell-on-start,shell-on-finish,shell-on-error,disable-timeout,timeout,pbuilder-opts:' -n $(basename $0) -- "$@")
 eval set -- "$TEMP"
 
 ENABLE_HOOKS=1
 TO='--timeout 2h'
+PB_OPTS=
 while true; do
   case "$1" in
     --shell-on-start)
@@ -92,6 +94,10 @@ while true; do
       ;;
     --timeout | -t)
       TO="--timeout $2"
+      shift 2
+      ;;
+    --pbuilder-opts)
+      PB_OPTS="$2"
       shift 2
       ;;
     -h | --help)
@@ -195,7 +201,7 @@ for p in $@; do
 
   start_time=$(date +'%F %T')
 
-  ( nice sudo $PBUILDER $TO --build --configfile pbuilderrc --hookdir pbuilder-hooks --bindmounts $SHARED_DIR src/*.dsc >$ODIR/$p/stdout_stderr.txt 2>&1 ) &
+  ( nice sudo $PBUILDER $TO --build --configfile pbuilderrc --hookdir pbuilder-hooks --bindmounts $SHARED_DIR ${PB_OPTS:-} src/*.dsc >$ODIR/$p/stdout_stderr.txt 2>&1 ) &
   BUILD_PID=$!
 
   sleep 1
