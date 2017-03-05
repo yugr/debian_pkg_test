@@ -1,0 +1,16 @@
+#!/bin/sh -eu
+
+# Copyright 2017 Yury Gribov
+# 
+# Use of this source code is governed by MIT license that can be
+# found in the LICENSE.txt file.
+
+if test $# = 0; then
+  cat << EOF
+Usage: $(basename $0) LOG_PATH
+Finds Valgrind errors in pbuilder logs.
+EOF
+  exit 1
+fi
+
+grep -r 'ERROR SUMMARY: [^0]\|failed' $@

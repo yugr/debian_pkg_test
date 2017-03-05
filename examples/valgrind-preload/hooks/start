@@ -1,0 +1,24 @@
+#!/bin/sh -eux
+
+chmod a+w $SHARED_DIR/output
+
+LIB=$SHARED_DIR/valgrind-preload/bin/libpregrind.so
+
+# Remove most commonly used executables to reduce overhead
+cat > /blacklist.txt <<EOF
+/bin/*sh
+/bin/sed
+/bin/echo
+*cc1
+*cc1plus
+*collect2
+/usr/bin/ld
+EOF
+
+test -x $LIB
+! LD_PRELOAD=$LIB ls 2>&1 | grep -q ERROR
+! LD_PRELOAD=$LIB PREGRIND_VERBOSE=1 g++ -c -x c /dev/null 2>&1 | grep -q 'cc1: blacklisted'
+
+echo $LIB >> /etc/ld.so.preload
+
+echo "Installed Pregrind"

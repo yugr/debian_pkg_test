@@ -1,0 +1,7 @@
+#!/bin/sh -eu
+
+cat <<EOF
+#export PREGRIND_VERBOSE=1
+export PREGRIND_LOG_PATH=\$SHARED_DIR/output
+export PREGRIND_BLACKLIST=/blacklist.txt
+EOF
