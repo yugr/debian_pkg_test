@@ -5,8 +5,9 @@ and dynamic) is testing them on a sufficiently large codebase.
 
 Debian-package-test is a set of simple scripts that simplify
 application of code analysis tools to arbitrary Debian packages.
-It was originally developed for testing [SortChecker](https://github.com/yugr/sortcheck)
-and [StackWipe](https://github.com/yugr/StackWipe).
+It was originally developed for testing [SortChecker](https://github.com/yugr/sortcheck),
+[StackWipe](https://github.com/yugr/StackWipe) and
+[Valgrind-preload (Pregrind)](https://github.com/yugr/valgrind-preload).
 
 Debian-package-test is built on top of standard Debian build tools (pbuilder
 et al.). It builds package and runs it's builtin testsuites, if any.
