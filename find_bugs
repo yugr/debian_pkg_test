@@ -5,8 +5,13 @@
 # Use of this source code is governed by MIT license that can be
 # found in the LICENSE.txt file.
 
-# Usage: find_bugs DIR
-# Finds "interesting" messages in pbuilder logs.
+if test $# != 1; then
+  cat <<EOF
+Usage: $(basename $0) LOG_PATH
+Finds "interesting" messages in pbuilder logs.
+EOF
+  exit 1
+fi
 
 # TODO: make signals case-sensitive?
 GOOD_RE='Segmentation fault\|Bus error\|Illegal instruction\|Abort\|Terminated\|Killed\|\<SEGV\>\|\<TRAP\|ABORT\|assertion\|error:\|failed\|segfault'
