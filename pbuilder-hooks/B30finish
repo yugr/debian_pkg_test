@@ -10,6 +10,9 @@ if test -n "${ENABLE_HOOKS:-}" -a -x $SHARED_DIR/hooks/finish; then
   $SHARED_DIR/hooks/finish
 fi
 
+# Ensure that test_pkgs can access files
+chmod -R a+rw $SHARED_DIR/output
+
 if test -n "$SHELL_ON_FINISH"; then
   echo "$(basename $0): build and test done, running shell"
   cd /tmp/buildd/*/debian/..
