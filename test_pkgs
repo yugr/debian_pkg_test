@@ -185,7 +185,7 @@ for p in $@; do
     continue
   fi
 
-  if ! (cd src && apt-get source $p/$REL); then
+  if ! (cd src && rm -rf * && apt-get source $p/$REL); then
     # May be caused by changes on server so don't die
     warn "failed to download package $p"
     continue
@@ -201,11 +201,13 @@ for p in $@; do
 
   start_time=$(date +'%F %T')
 
+  # All this complexity is cause we can't use tee with --timeout (https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=855999)
+  trap '' INT
   ( nice sudo $PBUILDER $TO --build --configfile pbuilderrc --hookdir pbuilder-hooks --bindmounts $SHARED_DIR ${PB_OPTS:-} src/*.dsc >$ODIR/$p/stdout_stderr.txt 2>&1 ) &
   BUILD_PID=$!
 
   sleep 1
-  tail -f $ODIR/$p/stdout_stderr.txt &  # Can't use tee with --timeout (https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=855999)
+  tail -f $ODIR/$p/stdout_stderr.txt &
   TAIL_PID=$!
 
   if ! wait $BUILD_PID; then
@@ -213,16 +215,13 @@ for p in $@; do
     NFAILS=$((NFAILS + 1))
   fi
 
+  trap INT
   kill $TAIL_PID
 
   # Copy additional outputs
 
   journalctl -k -S "$start_time" > $ODIR/$p/syslog
   cp -r $SHARED_DIR/output $ODIR/$p
-
-  # Clean up
-
-  rm -rf src/* $SHARED_DIR/output/*
 done
 
 t=$(toc)

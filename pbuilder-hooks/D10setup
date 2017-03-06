@@ -5,6 +5,8 @@
 # Use of this source code is governed by MIT license that can be
 # found in the LICENSE.txt file.
 
+rm -rf $SHARED_DIR/output/*
+
 # Allow analyzer to do additional work at start
 if test -n "${ENABLE_HOOKS:-}" -a -x $SHARED_DIR/hooks/start; then
   $SHARED_DIR/hooks/start
