@@ -40,8 +40,6 @@ Then you'll need to setup a chroot:
 * setup the chroot:
 ```
 $ sudo cowbuilder --create --distribution $REL --components 'main universe multiverse restricted'
-* copy /usr/share/doc/pbuilder/examples/B20autopkgtest to pbuilder-hooks
-  subdir (can't include it directly due to incompatible license)
 $ sudo cowbuilder --login --distribution $REL --bindmounts pbuilder-shared --save-after-login
 # cat > /etc/apt/sources.list
   ...  # Copy contents of your host sources.list
@@ -58,6 +56,8 @@ $ sudo cowbuilder --login --distribution $REL --bindmounts pbuilder-shared --sav
 # rngd -b -r /dev/urandom
 # exit
 ```
+* copy /usr/share/doc/pbuilder/examples/B20autopkgtest to pbuilder-hooks
+  subdir (can't include it directly due to incompatible license)
 * do tool-specific setup; this usually means installing prerequisites, making folder
   for logs, building/installing necessary files inside the chroot; e.g. for
   StackWipe:
@@ -66,6 +66,7 @@ $ sudo cowbuilder --login --distribution $REL --bindmounts pbuilder-shared --sav
 # cd /path/to/pbuilder-shared/StackWipe
 # make clean all
 ```
+  (pbuilder-shared/ folder will be shared across host and chroot).
 * add tool-specific hooks in pbuilder-shared/hooks
 
 There are three types of hooks:
@@ -80,8 +81,6 @@ There are three types of hooks:
 Example hooks are in `examples/` folder.
 
 TODO:
-* explain pbuilder-shared
-* provide instructions for Valgrind
 * provide instructions for sanitizers
 
 # Finding targets
