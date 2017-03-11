@@ -161,6 +161,8 @@ ODIR=test_pkgs.$idx
 mkdir -p $ODIR
 date > $ODIR/stamp
 
+ulimit -c unlimited  # For children
+
 N=$#
 I=0
 NFAILS=0

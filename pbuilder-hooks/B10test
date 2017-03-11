@@ -48,6 +48,8 @@ cd $ROOT
 
 mf=$(find_top_makefile)
 
+ulimit -c unlimited
+
 if test -n "$mf"; then
   cd $(dirname $mf)
 
