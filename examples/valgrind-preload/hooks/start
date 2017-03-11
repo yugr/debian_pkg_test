@@ -12,6 +12,7 @@ cat > /blacklist.txt <<EOF
 *cc1
 *cc1plus
 *collect2
+*gdb
 /usr/bin/ld
 EOF
 
