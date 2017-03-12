@@ -8,6 +8,8 @@ LIB=$SHARED_DIR/valgrind-preload/bin/libpregrind.so
 cat > /blacklist.txt <<EOF
 /bin/*sh
 /bin/sed
+/bin/grep
+/bin/rm
 /bin/echo
 *cc1
 *cc1plus
