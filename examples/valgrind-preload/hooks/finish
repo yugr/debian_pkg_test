@@ -1,0 +1,10 @@
+#!/bin/sh -eu
+
+export PREGRIND_DISABLE=1
+
+# Get rid of useless reports
+for f in $SHARED_DIR/output/vg.*; do
+  if ! grep -q 'ERROR SUMMARY: [^0]\|failed' $f; then
+    rm -f $f
+  fi
+done
