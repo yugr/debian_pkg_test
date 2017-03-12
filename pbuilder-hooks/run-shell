@@ -5,5 +5,5 @@
 # Use of this source code is governed by MIT license that can be
 # found in the LICENSE.txt file.
 
-apt-get install -y --force-yes vim less bash gdb
+apt-get install -y --force-yes vim bash gdb
 /bin/bash < /dev/tty > /dev/tty 2> /dev/tty
