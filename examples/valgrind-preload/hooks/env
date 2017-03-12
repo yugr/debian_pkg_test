@@ -2,7 +2,14 @@
 
 #echo 'export PREGRIND_VERBOSE=1'
 
+# --vgdb=no is to avoid "cannot create shared_mem file /tmp/vgdb-pipe-shared-mem-vgdb..." errors
+# when running under debign_pkg_test.
+
 cat <<EOF
 export PREGRIND_LOG_PATH=\$SHARED_DIR/output
 export PREGRIND_BLACKLIST=/blacklist.txt
+export PREGRIND_FLAGS='--leak-check=full --track-origins=yes --vgdb=no'
 EOF
+
+
+
