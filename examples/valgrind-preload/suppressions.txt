@@ -1,0 +1,19 @@
+{
+   Mktemp_uses_uninitialized_malloc_for_nonce_1
+   Memcheck:Value8
+   obj:/bin/mktemp
+}
+
+{
+   Mktemp_uses_uninitialized_malloc_for_nonce_2
+   Memcheck:Cond
+   obj:/bin/mktemp
+}
+
+{
+  Fakeroot_no_dbginfo
+  Memcheck:Param
+  msgsnd(msgp->mtext)
+  ...
+  obj:/usr/lib*/libfakeroot-sysv.so*
+}
