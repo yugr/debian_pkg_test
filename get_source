@@ -8,7 +8,7 @@
 # Usage: get_source_pkg PKG...
 # Map Debian packages to their source packages.
 
-REL=$(grep DISTRIB_CODENAME /etc/lsb-release | sed 's/.*=//')
+REL=$(lsb_release -cs)
 
 is_good_package() {
   # Skip packages which are not present in our distro

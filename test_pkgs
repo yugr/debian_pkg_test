@@ -37,7 +37,7 @@ toc() {
 }
 
 SHARED_DIR=$PWD/pbuilder-shared
-REL=$(grep DISTRIB_CODENAME /etc/lsb-release | sed 's/.*=//')  # Should match pbuilder's chroot!
+REL=$(lsb_release -cs)  # Should match pbuilder's chroot!
 PBUILDER=cowbuilder
 
 print_help_and_exit() {
@@ -51,8 +51,8 @@ Available options:
   --shell-on-finish  Drop to interactive shell on completion.
   --disable-hooks    Do not run hooks in pbuild-shared.
   --disable-timeout  Do not abort build on timeout (for manual debug).
-  --timeout TO       Specify timeout for package build (TO has std.
-                     duration syntax [0-9]*[hms] e.g. 100m or 1h).
+  --timeout TO       Specify timeout for package build. TO has standard
+                     duration syntax [0-9]*[hms] (e.g. 100m or 1h).
   --pbuilder-opts O  Forward options to pbuilder/cowbuilder.
   -h, --help         Print this message and exit.
 EOF
@@ -175,7 +175,8 @@ for p in $@; do
     continue
   fi
 
-  # Workaround for network shutdown on Ubuntu
+  # Workaround for network shutdowns on Ubuntu 16
+  # FIXME: get rid of this !!!
   if ! ping -c5 us.archive.ubuntu.com >/dev/null 2>&1; then
     #sudo service networking restart
     sudo service network-manager restart

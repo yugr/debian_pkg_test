@@ -11,7 +11,7 @@
 TMP=$(mktemp -d)
 trap "rm -rf $TMP" EXIT
 
-REL=$(grep DISTRIB_CODENAME /etc/lsb-release | sed 's/.*=//')
+REL=$(lsb_release -cs)
 
 if ! (cd $TMP && rm -rf * && timeout 60 apt-get source $1/$REL > /dev/null 2>&1); then
   return 1

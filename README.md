@@ -21,7 +21,7 @@ so it's quick, dirty and probably not very well designed.
 Firstly you need to inform APT about all existing package repositories:
 ```
 $ SERVER=http://us.archive.ubuntu.com/ubuntu
-$ REL=xenial  # trusty for 14.04
+$ REL=$(lsb_release -cs)
 $ COMPONENTS='main universe multiverse restricted'
 $ for REPO in $REL $REL-updates $REL-backports $REL-security; do
     echo deb $SERVER $REPO $COMPONENTS
@@ -42,7 +42,8 @@ Then you'll need to setup a chroot:
 $ sudo cowbuilder --create --distribution $REL --components 'main universe multiverse restricted'
 $ sudo cowbuilder --login --distribution $REL --bindmounts pbuilder-shared --save-after-login
 # cat > /etc/apt/sources.list
-  ...  # Copy contents of your host sources.list
+...  # Copy contents of your host sources.list
+(Ctrl-D)
 # apt-get upgrade
 # apt-get update
 # # Install packages for debugging errors inside chroot
@@ -56,6 +57,8 @@ $ sudo cowbuilder --login --distribution $REL --bindmounts pbuilder-shared --sav
 # rngd -b -r /dev/urandom
 # exit
 ```
+* in case you'll need debuginfo packages for symbolizing backtraces,
+  set up APT repos as described [here](https://wiki.ubuntu.com/Debug%20Symbol%20Packages)
 * copy /usr/share/doc/pbuilder/examples/B20autopkgtest to pbuilder-hooks
   subdir (can't include it directly due to incompatible license)
 * do tool-specific setup; this usually means installing prerequisites, making folder
@@ -87,25 +90,26 @@ TODO:
 
 Once set up, you'd want to find packages to run your tool on.
 
-Here's a short list of security-critical software in modern Linux
-(loosely based on bug reports in existing analyzers like [AFL](http://lcamtuf.coredump.cx/afl/#bugs),
+Here's a short list of security-critical software which I typically use for testing
+(loosely based on bug reports in existing checkers like [AFL](http://lcamtuf.coredump.cx/afl/#bugs),
 [ASan](https://github.com/google/sanitizers/wiki/AddressSanitizerFoundBugs)
 or [Fuzzing project](https://blog.fuzzing-project.org/)):
-* media: ffmpeg gimp mesa freetype thunderbird evince opencv alsa-\* cairo libsdl2 pango1.0 tiff djvulibre libjpeg
-* network: openssl nginx openvpn xbmc vsftpd curl openssh apache2 gnutls28
+* media: ffmpeg gimp mesa freetype evince opencv cairo libsdl2 pango1.0 tiff djvulibre libjpeg libpng libtiff libsndfile audiofile openjpeg vlc mupdf flac imagemagick libmatroska
+* network: openvpn vsftpd curl apache2 clamav bind9 ntp nginx
+* crypto: openssh openssl libgcrypt20 gnutls28 botan1.10
 * databases: mysql-5.5 mariadb-5.5 postgresql-common db5.3 sqlite3
+* compiler/interpreters: gcc clang bash openjdk-6 ghc php5 perl python2.7 lua50 octave
 * system: dbus samba gstreamer1.0 systemd
-* interpreters: openjdk-6 ghc php5 perl python2.7 lua50 octave ocaml
-* compilers: gcc clang
+* other: libftdi libxml2 libtasn1-6 dpkg libarchive
 
-Another option is getting most popular packages from
+Another option is to try several hundred top packages from
 [Debian package rating](http://popcon.debian.org/by_vote):
 ```
 # Remove 'head' below to get full list
 $ curl http://popcon.debian.org/by_vote 2>/dev/null | awk '/^[0-9]/{print $2}' | xargs ./get_source | head -100 | while read p; do ./is_c_pkg $p && echo $p; done | sort -u
 ```
 
-Or just use `apt-cache` if you don't care about ratings:
+Or just use `apt-cache` if you don't care about silly ratings:
 ```
 # Remove 'head' below to get full list
 $ apt-cache dump | awk '/^Package/ && !/:[^ ]|dbgsym/ { print $2; }' | xargs ./get_source | head -100 | while read p; do ./is_c_pkg $p && echo $p; done | sort -u
