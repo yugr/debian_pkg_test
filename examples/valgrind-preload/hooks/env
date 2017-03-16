@@ -2,7 +2,7 @@
 
 #echo 'export PREGRIND_VERBOSE=1'
 
-PREGRIND_FLAGS='--leak-check=full --show-leak-kinds=definite'
+PREGRIND_FLAGS='--leak-check=no --show-leak-kinds=definite'
 
 # Avoid "cannot create shared_mem file /tmp/vgdb-pipe-shared-mem-vgdb..." errors.
 PREGRIND_FLAGS="$PREGRIND_FLAGS --vgdb=no"
