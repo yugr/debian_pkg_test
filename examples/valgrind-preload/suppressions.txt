@@ -29,3 +29,34 @@
    Memcheck:Cond
    obj:/usr/bin/cmp
 }
+
+# Ignore some weird ioctl in cp
+{
+  cp_ioctl
+  Memcheck:Param
+  ioctl(generic)
+  ...
+  obj:/bin/cp
+}
+
+# Ugly, intentional uninitialized read
+# in get_session_marker()
+{
+   cmp
+   Memcheck:Cond
+   obj:/usr/bin/gpgv
+}
+
+# Intentional uninitialized read in gettext's freea()
+{
+  gettext_freea
+  Memcheck:Cond
+  obj:/usr/lib/*libgettextlib*.so*
+}
+
+# Ditto for libunistring
+{
+  libunistring_freea
+  Memcheck:Cond
+  obj:/usr/lib/*libunistring.so*
+}
