@@ -13,4 +13,4 @@ EOF
   exit 1
 fi
 
-grep -r 'ERROR SUMMARY: [^0]\|failed' $@
+grep -rl 'ERROR SUMMARY: [^0]\|failed' $@
