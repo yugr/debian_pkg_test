@@ -1,19 +1,31 @@
+# Intentinal access to uninitialized memory
+# when computing nonce
 {
-   Mktemp_uses_uninitialized_malloc_for_nonce_1
+   mktemp_1
    Memcheck:Value8
    obj:/bin/mktemp
 }
 
+# Ditto
 {
-   Mktemp_uses_uninitialized_malloc_for_nonce_2
+   mktemp_2
    Memcheck:Cond
    obj:/bin/mktemp
 }
 
+# No dbginfo for fakeroot
 {
-  Fakeroot_no_dbginfo
+  fakeroot
   Memcheck:Param
   msgsnd(msgp->mtext)
   ...
   obj:/usr/lib*/libfakeroot-sysv.so*
+}
+
+# Intentional overflow in cmp(1):
+# https://lists.gnu.org/archive/html/bug-diffutils/2013-08/msg00020.html
+{
+   cmp
+   Memcheck:Cond
+   obj:/usr/bin/cmp
 }
