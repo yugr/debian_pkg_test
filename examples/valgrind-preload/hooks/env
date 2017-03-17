@@ -10,7 +10,8 @@ PREGRIND_FLAGS="$PREGRIND_FLAGS --vgdb=no"
 # --track-origins incurs huge memory overhead so disable by default
 #PREGRIND_FLAGS="$PREGRIND_FLAGS --track-origins=yes"
 
-PREGRIND_FLAGS="$PREGRIND_FLAGS --suppressions=\$SHARED_DIR/suppressions.txt"
+PREGRIND_FLAGS="$PREGRIND_FLAGS --suppressions=\$SHARED_DIR/suppressions.txt --fullpath-after=/tmp/buildd"
+
 cat <<EOF
 export PREGRIND_LOG_PATH=\$SHARED_DIR/output
 export PREGRIND_BLACKLIST=/blacklist.txt
