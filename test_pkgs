@@ -64,7 +64,7 @@ error() {
   exit 1
 }
 
-TEMP=$(getopt -o 'ht:' --long 'help,disable-hooks,shell-on-start,shell-on-finish,shell-on-error,disable-timeout,timeout,pbuilder-opts:' -n $(basename $0) -- "$@")
+TEMP=$(getopt -o 'ht:' --long 'help,disable-hooks,shell-on-start,shell-on-finish,shell-on-error,disable-timeout,timeout:,pbuilder-opts:' -n $(basename $0) -- "$@")
 eval set -- "$TEMP"
 
 ENABLE_HOOKS=1
