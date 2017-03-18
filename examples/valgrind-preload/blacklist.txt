@@ -4,11 +4,17 @@
 /bin/rm
 /bin/echo
 /bin/chmod
+/bin/cat
+/bin/mv
 /usr/bin/basename
 /usr/bin/expr
 /usr/bin/id
 /usr/bin/make
 /usr/bin/md5sum
+/usr/bin/gcc
+/usr/bin/g++
+/usr/bin/cc
+/usr/bin/c++
 *cc1
 *cc1plus
 *collect2
