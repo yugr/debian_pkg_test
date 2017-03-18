@@ -94,7 +94,8 @@ Here's a short list of security-critical software which I typically use for test
 (loosely based on bug reports in existing checkers like [AFL](http://lcamtuf.coredump.cx/afl/#bugs),
 [ASan](https://github.com/google/sanitizers/wiki/AddressSanitizerFoundBugs)
 or [Fuzzing project](https://blog.fuzzing-project.org/)):
-* media: ffmpeg gimp mesa freetype evince opencv cairo libsdl2 pango1.0 tiff djvulibre libjpeg libpng libtiff libsndfile audiofile openjpeg vlc mupdf flac imagemagick libmatroska
+* media: freetype cairo libsdl2 pango1.0 tiff djvulibre libjpeg libpng libtiff libsndfile audiofile openjpeg mupdf flac libmatroska
+* media (large): ffmpeg gimp mesa imagemagick vlc evince opencv
 * network: openvpn vsftpd curl apache2 clamav bind9 ntp nginx
 * crypto: openssh openssl libgcrypt20 gnutls28 botan1.10
 * databases: mysql-5.5 mariadb-5.5 postgresql-common db5.3 sqlite3
