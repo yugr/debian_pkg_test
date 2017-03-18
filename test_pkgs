@@ -212,7 +212,9 @@ for p in $@; do
   # Copy additional outputs
 
   journalctl -k -S "$start_time" > $ODIR/$p/syslog
-  cp -r $SHARED_DIR/output $ODIR/$p
+
+  # Not all files may be copyable is finish hook failed to change perms due to timeout
+  cp -r $SHARED_DIR/output $ODIR/$p || true
 done
 
 t=$(toc)
