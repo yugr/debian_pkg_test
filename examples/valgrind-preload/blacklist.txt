@@ -1,0 +1,16 @@
+/bin/*sh
+/bin/sed
+/bin/grep
+/bin/rm
+/bin/echo
+/bin/chmod
+/usr/bin/basename
+/usr/bin/expr
+/usr/bin/id
+/usr/bin/make
+/usr/bin/md5sum
+*cc1
+*cc1plus
+*collect2
+/usr/bin/gdb
+/usr/bin/ld

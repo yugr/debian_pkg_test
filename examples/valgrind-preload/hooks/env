@@ -14,7 +14,7 @@ PREGRIND_FLAGS="$PREGRIND_FLAGS --suppressions=\$SHARED_DIR/suppressions.txt --f
 
 cat <<EOF
 export PREGRIND_LOG_PATH=\$SHARED_DIR/output
-export PREGRIND_BLACKLIST=/blacklist.txt
+export PREGRIND_BLACKLIST=\$SHARED_DIR/blacklist.txt
 export PREGRIND_FLAGS="$PREGRIND_FLAGS"
 EOF
 
