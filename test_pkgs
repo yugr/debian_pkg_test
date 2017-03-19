@@ -38,7 +38,10 @@ toc() {
 
 SHARED_DIR=$PWD/pbuilder-shared
 REL=$(lsb_release -cs)  # Should match pbuilder's chroot!
-PBUILDER=cowbuilder
+
+if test -z "${PBUILDER:-}"; then
+  PBUILDER=cowbuilder
+fi
 
 print_help_and_exit() {
   cat <<EOF
@@ -204,7 +207,7 @@ for p in $@; do
 
   start_time=$(date +'%F %T')
 
-  if ! nice sudo $PBUILDER $TO --build --logfile $ODIR/$p/stdout_stderr.txt --configfile pbuilderrc --hookdir pbuilder-hooks --bindmounts $SHARED_DIR ${PB_OPTS:-} src/*.dsc; then
+  if ! nice sudo $PBUILDER --build $TO --logfile $ODIR/$p/stdout_stderr.txt --configfile pbuilderrc --hookdir pbuilder-hooks --bindmounts $SHARED_DIR ${PB_OPTS:-} src/*.dsc; then
     warn "failed to build package $p"
     NFAILS=$((NFAILS + 1))
   fi
