@@ -8,6 +8,7 @@ application of code analysis tools to arbitrary Debian packages.
 It was originally developed for testing [SortChecker](https://github.com/yugr/sortcheck),
 [StackWipe](https://github.com/yugr/StackWipe) and
 [Valgrind-preload (Pregrind)](https://github.com/yugr/valgrind-preload).
+It also supports AddressSanitizer.
 
 Debian-package-test is built on top of standard Debian build tools (pbuilder
 et al.). It builds package and runs it's builtin testsuites, if any.
@@ -81,10 +82,7 @@ There are three types of hooks:
   or copy necessary files to pbuilder-shared/output folder); note that this hook will
   be called both for successful and failed build
 
-Example hooks are in `examples/` folder.
-
-TODO:
-* provide instructions for sanitizers
+Many example hooks are in `examples/` folder.
 
 # Finding targets
 

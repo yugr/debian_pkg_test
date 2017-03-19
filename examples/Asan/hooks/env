@@ -1,0 +1,12 @@
+#!/bin/sh -eu
+
+# We can either intercept CC/CXX environment variables
+# or deceive the system by overring GCC with a "fake" wrapper.
+# The second approach is ugly but more efficient:
+# * some projects simply ignore CC/CXX
+# * some treat them differently from GCC
+#   (e.g. blt project compilation fails under CC=rancc)
+echo 'export PATH=$SHARED_DIR/gcc-wrappers:$PATH'
+
+echo 'export ASAN_OPTIONS=log_path=$SHARED_DIR/output/asan.log:keep_going=1:detect_leaks=0'
+echo 'ulimit -v unlimited'

@@ -1,0 +1,28 @@
+#!/bin/sh -eux
+
+echo 'int main() { free(malloc(0) + 10); return 0; }' > /tmp/$$.c
+
+# Verify basic functionality
+for CC in gcc x86_64-linux-gnu-gcc; do
+  which $CC | grep gcc-wrappers
+  gcc -w /tmp/$$.c
+  # Check that normal Asan works
+  ASAN_OPTIONS= ./a.out 2>&1 | grep -q 'AddressSanitizer: attempting free'
+  # Check that libasan has been patched to ignore LD_PRELOAD
+  ASAN_OPTIONS= LD_PRELOAD=libdl.so ls 2>&1 | grep -qvi 'ASan runtime does not come first in initial library list'
+done
+
+echo libasan.so.3 >> /etc/ld.so.preload
+
+# Check that libasan is preloaded successfully
+gcc-6 -w /tmp/$$.c
+ASAN_OPTIONS= ./a.out 2>&1 | grep -q 'AddressSanitizer: attempting free'
+
+# Check that logs are properly store in output/
+! ./a.out 2>&1
+test $(ls -1 $SHARED_DIR/output/asan.log* | wc -l) -gt 0
+
+# Check that libasan works with fakeroot
+! ASAN_OPTIONS= fakeroot ls 2>&1 | grep -qi 'ASan runtime does not come first in initial library list'
+
+echo "GCC intercepted successfully"

@@ -1,0 +1,13 @@
+#!/bin/sh -eu
+
+# Copyright 2017 Yury Gribov
+#
+# Use of this source code is governed by MIT license that can be
+# found in the LICENSE.txt file.
+
+REAL=/usr/bin/$(basename $0)
+
+# Remove ourselves from PATH (to avoid recursion)
+PATH=$(echo "$PATH" | tr : '\n' | grep -v gcc-wrappers | tr '\n' :)
+
+exec $REAL -fsanitize=address -fsanitize-recover=address "$@"
