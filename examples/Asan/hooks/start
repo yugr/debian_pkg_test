@@ -9,7 +9,7 @@ for CC in gcc x86_64-linux-gnu-gcc; do
   # Check that normal Asan works
   ASAN_OPTIONS= ./a.out 2>&1 | grep -q 'AddressSanitizer: attempting free'
   # Check that libasan has been patched to ignore LD_PRELOAD
-  ASAN_OPTIONS= LD_PRELOAD=libdl.so ls 2>&1 | grep -qvi 'ASan runtime does not come first in initial library list'
+  ! ASAN_OPTIONS= LD_PRELOAD=libdl.so ls 2>&1 | grep -qi 'ASan runtime does not come first in initial library list'
 done
 
 echo libasan.so.3 >> /etc/ld.so.preload
