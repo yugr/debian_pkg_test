@@ -60,18 +60,3 @@
   Memcheck:Cond
   obj:/usr/lib/*libunistring.so*
 }
-
-# Valgrind does not believe that sbrk returns zero-initialized memory
-# https://sourceforge.net/p/valgrind/mailman/message/23078945/
-{
-  ldconfig_sbrk
-  Memcheck:Cond
-  obj:/sbin/ldconfig.real
-}
-
-# Ditto
-{
-  ldconfig_sbrk
-  Memcheck:Value8
-  obj:/sbin/ldconfig.real
-}

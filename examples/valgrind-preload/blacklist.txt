@@ -1,3 +1,4 @@
+# Skip most frequently used standard programs to improve speed
 /bin/*sh
 /bin/sed
 /bin/grep
@@ -11,12 +12,18 @@
 /usr/bin/id
 /usr/bin/make
 /usr/bin/md5sum
+
+# Skip compiler too
 /usr/bin/gcc
 /usr/bin/g++
 /usr/bin/cc
 /usr/bin/c++
-*cc1
-*cc1plus
-*collect2
+/usr/*/cc1
+/usr/*/cc1plus
+/usr/*/collect2
 /usr/bin/gdb
 /usr/bin/ld
+
+# Ldconfig.real trigger lots of spurious warnings due to
+# https://sourceforge.net/p/valgrind/mailman/message/23078945/
+/sbin/ldconfig.real
