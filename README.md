@@ -47,8 +47,6 @@ $ sudo cowbuilder --login --distribution $REL --bindmounts pbuilder-shared --sav
 (Ctrl-D)
 # apt-get upgrade
 # apt-get update
-# # Install packages for debugging errors inside chroot
-# apt-get install vim gdb
 # # Turn off synches on every dpkg write to speed things up
 # echo force-unsafe-io > /etc/dpkg/dpkg.cfg.d/02apt-speedup
 # # Turn off man updates to speed up package installation
@@ -56,6 +54,8 @@ $ sudo cowbuilder --login --distribution $REL --bindmounts pbuilder-shared --sav
 # # Avoid gpg (used by adt-run) stalling machine due to lack of entropy
 # apt-get install -y --force-yes rng-tools
 # rngd -b -r /dev/urandom
+# # Install packages for debugging errors inside chroot
+# apt-get install vim gdb valgrind
 # exit
 ```
 * in case you'll need debuginfo packages for symbolizing backtraces,
