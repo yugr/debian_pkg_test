@@ -1,0 +1,3 @@
+#!/bin/sh -eu
+# Asan can't work under VG so disable it
+"$@"
