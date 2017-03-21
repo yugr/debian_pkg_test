@@ -18,12 +18,14 @@ echo libasan.so.3 >> /etc/ld.so.preload
 gcc-6 -w /tmp/$$.c
 ASAN_OPTIONS= ./a.out 2>&1 | grep -q 'AddressSanitizer: attempting free'
 
-# Check that logs are properly store in output/
+# Check that logs are properly stored in output/
 ! ./a.out 2>&1
 test $(ls -1 $SHARED_DIR/output/asan.log* | wc -l) -gt 0
 rm -f $SHARED_DIR/output/asan.log*
 
 # Check that libasan works with fakeroot
 ! ASAN_OPTIONS= fakeroot ls 2>&1 | grep -qi 'ASan runtime does not come first in initial library list'
+
+ulimit -a
 
 echo "GCC intercepted successfully"

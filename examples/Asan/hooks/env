@@ -8,5 +8,6 @@
 #   (e.g. blt project compilation fails under CC=rancc)
 echo 'export PATH=$SHARED_DIR/gcc-wrappers:$PATH'
 
-echo 'export ASAN_OPTIONS=log_path=$SHARED_DIR/output/asan.log:keep_going=1:detect_leaks=0'
+# TODO: detect_stack_use_after_return=1
+echo 'export ASAN_OPTIONS=log_path=$SHARED_DIR/output/asan.log:halt_on_error=0:detect_leaks=0:print_cmdline=1:abort_on_error=1:strict_string_checks=1'
 echo 'ulimit -v unlimited'
