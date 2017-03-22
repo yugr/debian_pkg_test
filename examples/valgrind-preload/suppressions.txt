@@ -60,3 +60,11 @@
   Memcheck:Cond
   obj:/usr/lib/*libunistring.so*
 }
+
+# libgcrypt XORs random number with malloc()'ed buffer to get entropy
+{
+  random_fips
+  Memcheck:Cond
+  ...
+  fun:x931_aes_driver
+}
