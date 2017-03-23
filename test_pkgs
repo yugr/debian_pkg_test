@@ -218,6 +218,8 @@ for p in $@; do
 
   # Not all files may be copyable is finish hook failed to change perms due to timeout
   cp -r $SHARED_DIR/output $ODIR/$p || true
+
+  sync
 done
 
 t=$(toc)
