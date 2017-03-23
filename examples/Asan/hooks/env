@@ -9,5 +9,6 @@
 echo 'export PATH=$SHARED_DIR/gcc-wrappers:$PATH'
 
 # TODO: detect_stack_use_after_return=1
-echo 'export ASAN_OPTIONS=log_path=$SHARED_DIR/output/asan.log:halt_on_error=0:detect_leaks=0:print_cmdline=1:abort_on_error=1:strict_string_checks=1'
+# TODO: strict_string_checks=1 (after https://github.com/google/sanitizers/issues/787 is fixed)
+echo 'export ASAN_OPTIONS=log_path=$SHARED_DIR/output/asan.log:halt_on_error=0:detect_leaks=0:print_cmdline=1:abort_on_error=1:allocator_may_return_null=1'
 echo 'ulimit -v unlimited'
