@@ -68,7 +68,7 @@ if test -n "$mf"; then
     :
   else
     echo >&2 "$(basename $0): don't know how to run tests in $PWD; here are the top-level goals:"
-    print_make_goals >&2
+    print_make_goals >&2 || true
     echo >&2 "And here is the directory contents:"
     ls -R $ROOT >&2
     $(dirname $0)/C10shell
