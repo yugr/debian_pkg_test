@@ -1,4 +1,5 @@
-This is a very draft work on integrating AddressSanitizer to pbuilder.
+This is a very draft work on integrating AddressSanitizer to pbuilder
+but it already finds real bugs (see the Trophies section below).
 
 # How to set up a chroot
 
@@ -18,7 +19,8 @@ very first preloaded library in application:
 
 This will fail to work with cowdancer and fakeroot (which Pbuilder is built upon) because they work via `LD_PRELOAD`.
 To circumvent this, you'll need to manually patch libasan.so to disable the check
-(I hope I can persuade maintainers to disable this check or at least make it optional).
+(I [filed a bug upstream](https://github.com/google/sanitizers/issues/786) but it'll take year(s)
+till fix propagates to GCC).
 
 BRUTAL HACK BELOW
 
@@ -56,3 +58,8 @@ As usual but I only tested under pbuilder for now so enable it via
     export PBUILDER=pbuilder
 
 before running `test_pkgs`.
+
+# Trophies
+
+* [tar: Read overflow in strip_compression_suffix](https://savannah.gnu.org/support/index.php?109281)
+
