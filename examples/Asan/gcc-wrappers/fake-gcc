@@ -10,4 +10,4 @@ REAL=/usr/bin/$(basename $0)
 # Remove ourselves from PATH (to avoid recursion)
 PATH=$(echo "$PATH" | tr : '\n' | grep -v gcc-wrappers | tr '\n' :)
 
-exec $REAL -fsanitize=address -fsanitize-recover=address "$@"
+exec $REAL "$@" -fsanitize=address -fsanitize-recover=address -fno-omit-frame-pointer -U_FORTIFY_SOURCE
