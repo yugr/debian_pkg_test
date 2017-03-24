@@ -50,6 +50,8 @@ mf=$(find_top_makefile)
 
 ulimit -c unlimited
 
+# TODO: run tests as build user, not root
+
 if test -n "$mf"; then
   cd $(dirname $mf)
 
