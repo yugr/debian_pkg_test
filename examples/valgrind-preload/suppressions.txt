@@ -68,3 +68,12 @@
   ...
   fun:x931_aes_driver
 }
+
+# pixman multiplies undef by 0 via SSE intrinsic in core_combine_over_u_sse2_mask
+# but Valgrind fails to realize that result is defined
+{
+  pixman_sse_1
+  Memcheck:Cond
+  ...
+  fun:pixman_image_composite32
+}

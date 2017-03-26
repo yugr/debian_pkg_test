@@ -27,3 +27,7 @@
 # Ldconfig.real trigger lots of spurious warnings due to
 # https://sourceforge.net/p/valgrind/mailman/message/23078945/
 /sbin/ldconfig.real
+
+# This is a duplicate of pixman_sse_1 in suppressions.txt as it causes
+# many spurious errors once undef is propagated to other functions
+/usr/bin/rsvg-convert
