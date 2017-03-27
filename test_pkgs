@@ -56,6 +56,7 @@ Available options:
   --disable-timeout  Do not abort build on timeout (for manual debug).
   --timeout TO       Specify timeout for package build. TO has standard
                      duration syntax [0-9]*[hms] (e.g. 100m or 1h).
+                     Automatically enabled on any --shell-on-*.
   --pbuilder-opts O  Forward options to pbuilder/cowbuilder.
   -h, --help         Print this message and exit.
 EOF
@@ -77,14 +78,17 @@ while true; do
   case "$1" in
     --shell-on-start)
       SHELL_ON_START=1
+      TO=
       shift
       ;;
     --shell-on-finish)
       SHELL_ON_FINISH=1
+      TO=
       shift
       ;;
     --shell-on-error)
       SHELL_ON_ERROR=1
+      TO=
       shift
       ;;
     --disable-hooks)
