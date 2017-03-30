@@ -91,3 +91,6 @@ else
   $(dirname $0)/C10shell
 fi
 
+# Ensure that test_pkgs can access files
+chmod -R a+rw $SHARED_DIR/output
+
