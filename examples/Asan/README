@@ -70,7 +70,5 @@ before running `test_pkgs`.
 
 Investigate build fails:
 * fail on missing libpthread in java with preloaded libasan (e.g. in db5.3)
-* autolink -ldl to fix issues in gpg, procps, rsyslog
 * atk1.0 ("warning: the use of `tmpnam' is dangerous, better use `mkstemp'")
 * fix Asan bugs in upstream
-* disable Asan sighandlers?
