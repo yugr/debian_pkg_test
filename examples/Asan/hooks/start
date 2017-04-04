@@ -12,6 +12,7 @@ for CC in gcc x86_64-linux-gnu-gcc; do
   ! ASAN_OPTIONS= LD_PRELOAD=libdl.so ls 2>&1 | grep -qi 'ASan runtime does not come first in initial library list'
 done
 
+# TODO: preload full path to avoid "ld.so: object 'libasan.so.3' from /etc/ld.so.preload cannot be preloaded"
 echo libasan.so.3 >> /etc/ld.so.preload
 
 # Check that libasan is preloaded successfully
