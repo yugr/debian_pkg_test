@@ -12,4 +12,4 @@ PATH=$(echo "$PATH" | tr : '\n' | grep -v gcc-wrappers | tr '\n' :)
 
 # Link libdl to avoid errors in packages who are fooled by libasan's dlsym interceptor (gpg, procps, rsyslog)
 # TODO: add -lpthreadl? It fails java e.g. in db5.3
-exec $REAL "$@" -fsanitize=address -fsanitize-recover=address -fno-omit-frame-pointer -U_FORTIFY_SOURCE -ldl
+exec $REAL "$@" -fsanitize=address -fsanitize-recover=address -fno-omit-frame-pointer -U_FORTIFY_SOURCE -ldl -g
