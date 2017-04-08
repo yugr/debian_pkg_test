@@ -32,25 +32,25 @@ Disabling the check depends on version of libasan.so.3 that you have but general
 * now we need to replace return value of `dl_iterate_phdr` with 0; one of many ways to achieve this is
   to replace `movl` below
 
-    c69a0:       53                      push   %rbx
-    c69a1:       48 8d 3d 58 ff ff ff    lea    -0xa8(%rip),%rdi        # c6900 <__interceptor_fclose@@Base+0x850>
-    c69a8:       48 83 ec 10             sub    $0x10,%rsp
-    c69ac:       48 89 e6                mov    %rsp,%rsi
-    c69af:       48 c7 04 24 00 00 00    movq   $0x0,(%rsp)
-    c69b6:       00
-    c69b7:       64 48 8b 04 25 28 00    mov    %fs:0x28,%rax
-    c69be:       00 00
-    c69c0:       48 89 44 24 08          mov    %rax,0x8(%rsp)
-    c69c5:       31 c0                   xor    %eax,%eax
-    c69c7:       e8 64 82 f5 ff          callq  1ec30 <dl_iterate_phdr@plt>
-    c69cc:       48 8b 1c 24             mov    (%rsp),%rbx
-    c69d0:       48 85 db                test   %rbx,%rbx
-    c69d3:       74 14                   je     c69e9 <__interceptor_fclose@@Base+0x939>
+      c69a0:       53                      push   %rbx
+      c69a1:       48 8d 3d 58 ff ff ff    lea    -0xa8(%rip),%rdi        # c6900 <__interceptor_fclose@@Base+0x850>
+      c69a8:       48 83 ec 10             sub    $0x10,%rsp
+      c69ac:       48 89 e6                mov    %rsp,%rsi
+      c69af:       48 c7 04 24 00 00 00    movq   $0x0,(%rsp)
+      c69b6:       00
+      c69b7:       64 48 8b 04 25 28 00    mov    %fs:0x28,%rax
+      c69be:       00 00
+      c69c0:       48 89 44 24 08          mov    %rax,0x8(%rsp)
+      c69c5:       31 c0                   xor    %eax,%eax
+      c69c7:       e8 64 82 f5 ff          callq  1ec30 <dl_iterate_phdr@plt>
+      c69cc:       48 8b 1c 24             mov    (%rsp),%rbx
+      c69d0:       48 85 db                test   %rbx,%rbx
+      c69d3:       74 14                   je     c69e9 <__interceptor_fclose@@Base+0x939>
 
   with
 
-    c69cc:       48 31 db                xor    %rbx, %rbx
-    c69cf:       90                      nop
+      c69cc:       48 31 db                xor    %rbx, %rbx
+      c69cf:       90                      nop
 
 # How to run
 
