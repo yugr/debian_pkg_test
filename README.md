@@ -8,7 +8,8 @@ application of code analysis tools to arbitrary Debian packages.
 It was originally developed for testing [SortChecker](https://github.com/yugr/sortcheck),
 [StackWipe](https://github.com/yugr/StackWipe) and
 [Valgrind-preload (Pregrind)](https://github.com/yugr/valgrind-preload).
-It also supports AddressSanitizer.
+It also supports AddressSanitizer (and can be extended to other sanitizers
+too).
 
 Debian-package-test is built on top of standard Debian build tools (pbuilder
 et al.). It builds package and runs it's builtin testsuites, if any.
@@ -143,9 +144,8 @@ to reference.
 # Known issues
 
 This tool should be easily adaptable to other dynamic checkers
-(sanitizers, Valgrind, etc.) although I do not have plans
-to implement this any time soon. Ping me if you think it may of help
-for your project.
+(UBSan, etc.) although I do not have plans to add anything else any time soon.
+Ping me if you think this infrastructure may of help for your checker.
 
 Tool fails to run tests for many packages due to
 * non-standard makefile names (e.g. GNUmakefile in batmon.app, makefile in bcpp, Makefile.tests in xml2, etc.)
@@ -158,7 +158,7 @@ Still 50% of packages are testable on average.
 
 Many Debian packages come with unit-testsuites but most
 seem to test only basic functionality and thus do not uncover too many errors
-(I've mined just 3 bugs out of ~1000 runs).
+(in case of SortChecker I've mined only 3 bugs out of ~1000 runs).
 
 It may be that system-level automated tests could achieve
 better coverage and bugcount. Here's a list of popular
