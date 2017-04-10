@@ -64,7 +64,7 @@ before running `test_pkgs`.
 
 * [tar: Read overflow in strip_compression_suffix](https://savannah.gnu.org/support/index.php?109281)
 * [iproute2: Buffer overflow in inverttable](http://lists.openwall.net/netdev/2017/03/24/56)
-* [dbus: Read overflow in test/corrupt.c](https://bugs.freedesktop.org/show_bug.cgi?id=100568)
+* [dbus: Read overflow in test/corrupt.c](https://bugs.freedesktop.org/show_bug.cgi?id=100568) (fixed)
 
 (as well as some other bugs already fixed in upstream versions).
 
