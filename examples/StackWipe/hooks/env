@@ -2,7 +2,7 @@
 
 # Forward all StackRandomizer variables to chroot
 for var in $(set | grep '^RAN\w\+=' | cut -d= -f1); do
-  echo $(eval "echo $var")
+  echo export $var=$(eval "echo \$$var")
 done
 
 # We can either intercept CC/CXX environment variables
