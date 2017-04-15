@@ -1,0 +1,24 @@
+#!/bin/sh -eu
+
+# Copyright 2017 Yury Gribov
+#
+# Use of this source code is governed by MIT license that can be
+# found in the LICENSE.txt file.
+
+# Remove ourselves from PATH (to avoid recursion)
+PATH=$(echo "$PATH" | tr : '\n' | grep -v gcc-wrappers | tr '\n' :)
+
+if echo $0 | grep -q '++$'; then
+  CLANG=clang++
+else
+  CLANG=clang
+fi
+
+if test "${PADWIPE_DISABLE:-0}" -ne 0; then
+  FLAGS=
+else
+  FLAGS="-Qunused-arguments -Xclang -load -Xclang $(dirname $0)/../PadWipe/bin/PadWipe.so"
+fi
+
+# TODO: fallback to gcc on error?
+exec $CLANG "$@" $FLAGS

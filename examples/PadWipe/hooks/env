@@ -1,0 +1,14 @@
+#!/bin/sh -eu
+
+# Forward all StackWipe variables to chroot
+for var in $(set | grep '^PADWIPE\w\+=' | cut -d= -f1); do
+  echo export $var=$(eval "echo \$$var")
+done
+
+# We can either intercept CC/CXX environment variables
+# or deceive the system by overring GCC with a "fake" wrapper.
+# The second approach is ugly but more efficient:
+# * some projects simply ignore CC/CXX
+# * some treat them differently from GCC
+#   (e.g. blt project compilation fails under CC=rancc)
+echo 'export PATH=$SHARED_DIR/gcc-wrappers:$PATH'
