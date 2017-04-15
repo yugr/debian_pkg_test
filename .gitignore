@@ -1,3 +1,4 @@
+.*.swp
 pbuilder-shared/*
 pbuilder-hooks/B*autopkgtest
 pbuilderrc
