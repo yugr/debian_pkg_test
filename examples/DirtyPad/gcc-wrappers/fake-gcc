@@ -17,7 +17,7 @@ fi
 if test "${PADWIPE_DISABLE:-0}" -ne 0; then
   FLAGS=
 else
-  FLAGS="-Qunused-arguments -Xclang -load -Xclang $(dirname $0)/../PadWipe/bin/PadWipe.so"
+  FLAGS="-Qunused-arguments -Xclang -load -Xclang $(dirname $0)/../DirtyPad/bin/DirtyPad.so"
 fi
 
 # TODO: fallback to gcc on error?

@@ -4,8 +4,8 @@
 for CC in gcc x86_64-linux-gnu-gcc; do
   which $CC | grep gcc-wrappers
   echo 'struct S { char x; int y; }; struct S foo() { struct S s; return s; }' > /tmp/$$.c
-  PADWIPE_DISABLE=0 $CC /tmp/$$.c -S
-  grep -q memset $$.s  # PadWipe should have inserted memset
+  DIRTYPAD_DISABLE=0 $CC /tmp/$$.c -S
+  grep -q memset $$.s  # DirtyPad should have inserted memset
 done
 
-echo "PadWipe: GCC intercepted successfully"
+echo "DirtyPad: GCC intercepted successfully"

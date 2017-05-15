@@ -6,7 +6,7 @@ and dynamic) is testing them on a sufficiently large codebase.
 Debian-package-test is a set of simple scripts that simplify
 application of code analysis tools to arbitrary Debian packages.
 It was originally developed for testing [SortChecker](https://github.com/yugr/sortcheck),
-[StackWipe](https://github.com/yugr/StackWipe) and
+[DirtyFrame](https://github.com/yugr/DirtyFrame) and
 [Valgrind-preload (Pregrind)](https://github.com/yugr/valgrind-preload).
 It also supports AddressSanitizer (and can be extended to other sanitizers
 too).

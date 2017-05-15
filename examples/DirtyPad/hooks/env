@@ -1,7 +1,7 @@
 #!/bin/sh -eu
 
 # Forward all StackWipe variables to chroot
-for var in $(set | grep '^PADWIPE\w\+=' | cut -d= -f1); do
+for var in $(set | grep '^DIRTYPAD\w\+=' | cut -d= -f1); do
   echo export $var=$(eval "echo \$$var")
 done
 
