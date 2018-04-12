@@ -60,6 +60,10 @@ As usual but I only tested under pbuilder for now so enable it via
 
 before running `test_pkgs`.
 
+# How to analyze results
+
+As usual, Asan reports will be stored in pbuilder-shared/output
+
 # Trophies
 
 * [tar: Read overflow in strip_compression_suffix](https://savannah.gnu.org/support/index.php?109281)
