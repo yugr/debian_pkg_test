@@ -34,20 +34,20 @@ $ sudo apt-get update
 
 Then you'll need to setup a chroot:
 * install pbuilder and cowbuilder and add them to sudoers
-  (replace `%username%` with user name):
+  (replace `$USER` with user name):
 ```
-%username% ALL=(ALL) NOPASSWD: /usr/sbin/pbuilder
-%username% ALL=(ALL) NOPASSWD: /usr/sbin/cowbuilder
+$USER ALL=(ALL) NOPASSWD: /usr/sbin/pbuilder
+$USER ALL=(ALL) NOPASSWD: /usr/sbin/cowbuilder
 ```
 * setup the chroot:
 ```
-$ sudo cowbuilder --create --distribution $REL --components 'main universe multiverse restricted'
+$ sudo cowbuilder --create --distribution $REL --components "$COMPONENTS"
 $ sudo cowbuilder --login --distribution $REL --bindmounts pbuilder-shared --save-after-login
 # cat > /etc/apt/sources.list
 ...  # Copy contents of your host sources.list
 (Ctrl-D)
-# apt-get upgrade
 # apt-get update
+# apt-get upgrade
 # # Turn off synches on every dpkg write to speed things up
 # echo force-unsafe-io > /etc/dpkg/dpkg.cfg.d/02apt-speedup
 # # Turn off man updates to speed up package installation
