@@ -103,7 +103,7 @@ or [Fuzzing project](https://blog.fuzzing-project.org/)):
 * other: libftdi libxml2 libtasn1-6 dpkg libarchive
 
 Another option is to try several hundred top packages from
-[Debian package rating](http://popcon.debian.org/by_vote):
+[Debian package rating](https://popcon.debian.org/by_vote):
 ```
 # Remove 'head' below to get full list
 $ curl http://popcon.debian.org/by_vote 2>/dev/null | awk '/^[0-9]/{print $2}' | xargs ./get_source | head -100 | while read p; do ./is_c_pkg $p && echo $p; done | sort -u
