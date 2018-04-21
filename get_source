@@ -22,7 +22,7 @@ is_good_package() {
   fi
 
 #  # Skip virtual packages
-#  if apt-cache show $1/$REL 2>&1 | grep -q 'No packages found'; then
+#  if apt-cache show --quiet=0 $1/$REL 2>&1 | grep -q 'No packages found'; then
 #    return 1
 #  fi
 
