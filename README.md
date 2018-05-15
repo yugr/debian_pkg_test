@@ -32,14 +32,14 @@ $ for REPO in $REL $REL-updates $REL-backports $REL-security; do
 $ sudo apt-get update
 ```
 
-Then you'll need to setup a chroot:
-* install pbuilder and cowbuilder and add them to sudoers
-  (replace `$USER` with user name):
+Then set up a chroot:
+* install pbuilder and cowbuilder and add them to sudoers:
 ```
+# Replace `$USER` with user name
 $USER ALL=(ALL) NOPASSWD: /usr/sbin/pbuilder
 $USER ALL=(ALL) NOPASSWD: /usr/sbin/cowbuilder
 ```
-* setup the chroot:
+* create chroot (use `--basepath` if you need multiple chroots):
 ```
 $ sudo cowbuilder --create --distribution $REL --components "$COMPONENTS"
 $ sudo cowbuilder --login --distribution $REL --bindmounts pbuilder-shared --save-after-login
@@ -78,7 +78,7 @@ There are three types of hooks:
 * environment hook `pbuilder-shared/hooks/env` to modify startup envinronment variables e.g.
   set `PATH`, `LD_LIBRARY_PATH`, `CC`, `CXX`, etc.
 * startup hook `pbuilder-shared/hooks/start` (this usually contains a quick smoke test of
-  tools functionality e.g. that it detects some standard error)
+  tool's functionality e.g. that it detects some standard error)
 * completion hook `pbuilder-shared/hooks/finish` (this may print additional output to console
   or copy necessary files to pbuilder-shared/output folder); note that this hook will
   be called both for successful and failed build
@@ -109,7 +109,10 @@ Another option is to try several hundred top packages from
 $ curl http://popcon.debian.org/by_vote 2>/dev/null | awk '/^[0-9]/{print $2}' | xargs ./get_source | head -100 | while read p; do ./is_c_pkg $p && echo $p; done | sort -u
 ```
 
-Or just use `apt-cache` if you don't care about silly ratings:
+You can also use [Debian Code Search](https://codesearch.debian.net) to search for packages which contain relevant APIs
+([debian-code-search-cli](https://github.com/FedericoCeratto/debian-code-search-cli) gives cmdline interface).
+
+Or just take first N packages from `apt-cache`:
 ```
 # Remove 'head' below to get full list
 $ apt-cache dump | awk '/^Package/ && !/:[^ ]|dbgsym/ { print $2; }' | xargs ./get_source | head -100 | while read p; do ./is_c_pkg $p && echo $p; done | sort -u
