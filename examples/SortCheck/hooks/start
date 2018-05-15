@@ -1,6 +1,10 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 
-LIB=/pbuilder-shared/SortCheck/bin/libsortcheck.so
+# Ensure output file is writable by all users
+touch $SHARED_DIR/output/sortcheck.log
+chmod a+rwx $SHARED_DIR/output/sortcheck.log
+
+LIB=$SHARED_DIR/SortCheck/bin/libsortcheck.so
 test -x $LIB
 ! LD_PRELOAD=$LIB ls 2>&1 | grep -q ERROR
 
