@@ -129,6 +129,9 @@ Results will be stored in `test_pkgs.$NUM` for further analysis.
 
 `test_pkgs` can be customized with various cmdline options
 (mainly for debugging errors), see `test_pkgs -h` for details.
+In particular, to specify Pbuilder chroot use `--pbuilder-opts '--basepath /var/cache/pbuilder/$CHROOT_NAME.cow'`
+
+Note that you might want to cherry-pick a fix for [#855999](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=855999).
 
 # Analyzing results
 
