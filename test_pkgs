@@ -173,6 +173,7 @@ ulimit -c unlimited  # For children
 N=$#
 I=0
 NFAILS=0
+NSKIPS=0
 for p in $@; do
   I=$((I+1))
   echo "TESTING PACKAGE $p ($I/$N)"
@@ -192,11 +193,14 @@ for p in $@; do
   # Skip large assets
   size=$(apt-cache show $p/$REL | grep ^Size: | awk '{print $2}' | sum)
   if test $size -gt $(( 128 * 1024 * 1024 )); then
+    NSKIPS=$((NSKIPS+1))
+    warn "skipping large package $p"
     continue
   fi
 
   if ! (cd src && rm -rf * && apt-get source $p/$REL); then
     # May be caused by changes on server so don't die
+    NSKIPS=$((NSKIPS+1))
     warn "failed to download package $p"
     continue
   fi
@@ -211,7 +215,7 @@ for p in $@; do
 
   start_time=$(date +'%F %T')
 
-  if ! nice sudo $PBUILDER --build $TO --logfile $ODIR/$p/stdout_stderr.txt --configfile pbuilderrc --hookdir pbuilder-hooks --bindmounts $SHARED_DIR ${PB_OPTS:-} src/*.dsc; then
+  if ! nice sudo $PBUILDER --build $TO --logfile $ODIR/$p/stdout_stderr.txt --configfile pbuilderrc --hookdir pbuilder-hooks --bindmounts $SHARED_DIR ${PB_OPTS:-} src/*.dsc < /dev/null; then
     warn "failed to build package $p"
     NFAILS=$((NFAILS + 1))
   fi
@@ -229,4 +233,4 @@ done
 t=$(toc)
 t=$(echo "scale=2; $t / 60 / 60" | bc)
 
-echo "Built $N packages in $t hours ($NFAILS failed)"
+echo "Built $N unique packages in $t hours ($NFAILS failed, $NSKIPS skipped)"
