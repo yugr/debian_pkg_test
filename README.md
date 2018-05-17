@@ -154,7 +154,7 @@ This tool should be easily adaptable to other dynamic checkers
 Ping me if you think this infrastructure may of help for your checker.
 
 Tool fails to run tests for many packages due to
-* non-standard makefile names (e.g. GNUmakefile in batmon.app, makefile in bcpp, Makefile.tests in xml2, etc.)
+* non-standard makefile names (e.g. GNUmakefile in batmon.app or pcp, makefile in bcpp or t-coffee, Makefile.tests in xml2, etc.)
 * weird langs (Haskell, PHP, Ruby, etc.)
 * non-standard build system (e.g. SCons in balder2d, waf in sushi, shell scripts in bomstrip, etc.)
 
