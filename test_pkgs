@@ -1,6 +1,6 @@
 #!/bin/sh -eux
 
-# Copyright 2015-2017 Yury Gribov
+# Copyright 2015-2021 Yury Gribov
 # 
 # Use of this source code is governed by MIT license that can be
 # found in the LICENSE.txt file.
@@ -215,7 +215,14 @@ for p in $@; do
 
   start_time=$(date +'%F %T')
 
-  if ! nice sudo $PBUILDER --build $TO --logfile $ODIR/$p/stdout_stderr.txt --configfile pbuilderrc --hookdir pbuilder-hooks --bindmounts $SHARED_DIR ${PB_OPTS:-} src/*.dsc < /dev/null; then
+  # TODO: mount to /pbuilder-shared instead?
+  if ! nice sudo $PBUILDER \
+      --build $TO \
+      --logfile $ODIR/$p/stdout_stderr.txt \
+      --configfile pbuilderrc \
+      --hookdir pbuilder-hooks \
+      --bindmounts $SHARED_DIR:$SHARED_DIR ${PB_OPTS:-} \
+      src/*.dsc < /dev/null; then
     warn "failed to build package $p"
     NFAILS=$((NFAILS + 1))
   fi
