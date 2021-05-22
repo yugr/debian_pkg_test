@@ -4,7 +4,7 @@ This is an integration of [SortChecker tool](https://github.com/yugr/sortcheck) 
 
 In addition to std. setup (described in top README)
 * copy `examples/SortCheck/*` to `pbuilder-shared`
-* copy `SortCheck/*` to `pbuilder-shared/SortCheck` and build it (via `make clean all`) in chroot.
+* clone `https://github.com/yugr/sortcheck` to `pbuilder-shared/sortcheck` and build it (via `make clean all`) inside chroot.
 
 # How to analyze results
 

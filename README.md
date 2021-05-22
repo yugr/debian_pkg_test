@@ -35,14 +35,18 @@ $ sudo apt-get update
 Then set up a chroot:
 * install pbuilder and cowbuilder and add them to sudoers:
 ```
+$ sudo apt-get install pbuilder cowbuilder
+$ sudo visudo
+...
 # Replace `$USER` with user name
 $USER ALL=(ALL) NOPASSWD: /usr/sbin/pbuilder
 $USER ALL=(ALL) NOPASSWD: /usr/sbin/cowbuilder
 ```
-* create chroot (use `--basepath` if you need multiple chroots):
+* set up a chroot (use `--basepath` if you need multiple chroots):
 ```
+$ cd path/to/debian_pkg_test
 $ sudo cowbuilder --create --distribution $REL --components "$COMPONENTS"
-$ sudo cowbuilder --login --distribution $REL --bindmounts pbuilder-shared --save-after-login
+$ sudo cowbuilder --login --distribution $REL --bindmounts $PWD/pbuilder-shared:$PWD/pbuilder_shared --save-after-login
 # cat > /etc/apt/sources.list
 ...  # Copy contents of your host sources.list
 (Ctrl-D)
@@ -55,23 +59,25 @@ $ sudo cowbuilder --login --distribution $REL --bindmounts pbuilder-shared --sav
 # # Avoid gpg (used by adt-run) stalling machine due to lack of entropy
 # apt-get install -y --force-yes rng-tools
 # rngd -b -r /dev/urandom
+# # Some packages need wget to download tests
+# apt-get install wget
 # # Install packages for debugging errors inside chroot
 # apt-get install vim gdb valgrind
 # exit
 ```
 * in case you'll need debuginfo packages for symbolizing backtraces,
   set up APT repos as described [here](https://wiki.ubuntu.com/Debug%20Symbol%20Packages)
-* copy /usr/share/doc/pbuilder/examples/B20autopkgtest to pbuilder-hooks
+* copy /usr/share/doc/pbuilder/examples/B20autopkgtest to `pbuilder-hooks`
   subdir (can't include it directly due to incompatible license)
 * do tool-specific setup; this usually means installing prerequisites, making folder
   for logs, building/installing necessary files inside the chroot; e.g. for
   StackWipe:
 ```
 # apt-get install python
-# cd /path/to/pbuilder-shared/StackWipe
+# cd /pbuilder-shared/StackWipe
 # make clean all
 ```
-  (pbuilder-shared/ folder will be shared across host and chroot).
+  (`pbuilder-shared/` folder will be shared across host and chroot).
 * add tool-specific hooks in pbuilder-shared/hooks
 
 There are three types of hooks:
@@ -84,6 +90,15 @@ There are three types of hooks:
   be called both for successful and failed build
 
 Many example hooks are in `examples/` folder.
+
+# Troubleshooting
+
+If `cowbuilder` ever fails with `Invalid cross-device link` error,
+you may need to manually delete and unmount leftover chroots:
+```
+$ sudo rm -rf /var/cache/pbuilder/build/cow.20593
+$ sudo umount /var/cache/pbuilder/build/cow.20593/dev/console
+```
 
 # Finding targets
 
