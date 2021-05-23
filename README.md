@@ -46,7 +46,7 @@ $USER ALL=(ALL) NOPASSWD: /usr/sbin/cowbuilder
 ```
 $ cd path/to/debian_pkg_test
 $ sudo cowbuilder --create --distribution $REL --components "$COMPONENTS"
-$ sudo cowbuilder --login --distribution $REL --bindmounts $PWD/pbuilder-shared:$PWD/pbuilder_shared --save-after-login
+$ sudo cowbuilder --login --distribution $REL --bindmounts $PWD/pbuilder-shared:/pbuilder_shared --save-after-login
 # cat > /etc/apt/sources.list
 ...  # Copy contents of your host sources.list
 (Ctrl-D)
@@ -77,7 +77,7 @@ $ sudo cowbuilder --login --distribution $REL --bindmounts $PWD/pbuilder-shared:
 # cd /pbuilder-shared/StackWipe
 # make clean all
 ```
-  (`pbuilder-shared/` folder will be shared across host and chroot).
+  (`pbuilder-shared/` folder will be shared across host and chroot, mounted in / in chroot).
 * add tool-specific hooks in pbuilder-shared/hooks
 
 There are three types of hooks:
@@ -99,6 +99,10 @@ you may need to manually delete and unmount leftover chroots:
 $ sudo rm -rf /var/cache/pbuilder/build/cow.20593
 $ sudo umount /var/cache/pbuilder/build/cow.20593/dev/console
 ```
+
+If you need to analyze what's going on in a container, run `test_pkgs`
+with `--shell-on-start`, `--shell-on-finish` or `--shell-on-error`,
+depending on which stage you are interested in.
 
 # Finding targets
 

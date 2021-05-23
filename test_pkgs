@@ -37,6 +37,7 @@ toc() {
 }
 
 SHARED_DIR=$PWD/pbuilder-shared
+TARGET_SHARED_DIR=/$(basename $SHARED_DIR)
 REL=$(lsb_release -cs)  # Should match pbuilder's chroot!
 
 if test -z "${PBUILDER:-}"; then
@@ -143,7 +144,7 @@ cat <<EOF > pbuilderrc
 export COMPONENTS='main universe multiverse restricted'
 export V=1
 export VERBOSE=1
-export SHARED_DIR=$SHARED_DIR
+export SHARED_DIR=$TARGET_SHARED_DIR
 export SHELL_ON_START=${SHELL_ON_START:-}
 export SHELL_ON_FINISH=${SHELL_ON_FINISH:-}
 export SHELL_ON_ERROR=${SHELL_ON_ERROR:-}
@@ -215,13 +216,12 @@ for p in $@; do
 
   start_time=$(date +'%F %T')
 
-  # TODO: mount to /pbuilder-shared instead?
   if ! nice sudo $PBUILDER \
       --build $TO \
       --logfile $ODIR/$p/stdout_stderr.txt \
       --configfile pbuilderrc \
       --hookdir pbuilder-hooks \
-      --bindmounts $SHARED_DIR:$SHARED_DIR ${PB_OPTS:-} \
+      --bindmounts $SHARED_DIR:$TARGET_SHARED_DIR ${PB_OPTS:-} \
       src/*.dsc < /dev/null; then
     warn "failed to build package $p"
     NFAILS=$((NFAILS + 1))
