@@ -144,7 +144,7 @@ To build and test packages in `paks.lst`, run
 $ ./test_pkgs $(cat paks.lst)
 ```
 
-Results will be stored in `test_pkgs.$NUM` for further analysis.
+Results (contents of pbuilder-shared/output, stdout/stderr, etc.) will be stored in `test_pkgs.$NUM` for further analysis.
 
 `test_pkgs` can be customized with various cmdline options
 (mainly for debugging errors), see `test_pkgs -h` for details.
