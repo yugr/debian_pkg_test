@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Forward all FailingMalloc variables to chroot
+for var in $(set | grep '^FAILING_MALLOC\w\+=' | cut -d= -f1); do
+  echo export $var=$(eval "echo \$$var")
+done
+
+echo 'export FAILING_MALLOC_LOGFILE=$SHARED_DIR/output/failingmalloc.log'

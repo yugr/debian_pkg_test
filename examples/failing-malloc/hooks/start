@@ -1,0 +1,12 @@
+#!/bin/sh -eux
+
+# Ensure output file is writable by all users
+touch $SHARED_DIR/output/failingmalloc.log
+chmod 777 $SHARED_DIR/output/failingmalloc.log
+
+# Quick verification
+LIB=$SHARED_DIR/failing-malloc/bin/libfailingmalloc.so
+test -x $LIB
+LD_PRELOAD=$LIB whoami
+
+echo $LIB >> /etc/ld.so.preload
