@@ -3,7 +3,7 @@
 One of the major tasks when developing code analyzers (both static
 and dynamic) is testing them on a sufficiently large codebase.
 
-Debian-package-test is a set of simple scripts that simplify
+Debian-package-test is a set of scripts that simplify
 application of code analysis tools to arbitrary Debian packages.
 It was originally developed for testing [SortChecker](https://github.com/yugr/sortcheck),
 [DirtyFrame](https://github.com/yugr/DirtyFrame), [DirtyPad](https://github.com/yugr/DirtyPad)
@@ -46,23 +46,9 @@ $USER ALL=(ALL) NOPASSWD: /usr/sbin/cowbuilder
 ```
 $ cd path/to/debian_pkg_test
 $ sudo cowbuilder --create --distribution $REL --components "$COMPONENTS"
-$ sudo cowbuilder --login --distribution $REL --bindmounts $PWD/pbuilder-shared:/pbuilder_shared --save-after-login
-# cat > /etc/apt/sources.list
-...  # Copy contents of your host sources.list
-(Ctrl-D)
-# apt-get update
-# apt-get upgrade
-# # Turn off synches on every dpkg write to speed things up
-# echo force-unsafe-io > /etc/dpkg/dpkg.cfg.d/02apt-speedup
-# # Turn off man updates to speed up package installation
-# echo 'man-db man-db/auto-update boolean false' | debconf-set-selections
-# # Avoid gpg (used by adt-run) stalling machine due to lack of entropy
-# apt-get install -y --force-yes rng-tools
-# rngd -b -r /dev/urandom
-# # Some packages need wget to download tests
-# apt-get install wget
-# # Install packages for debugging errors inside chroot
-# apt-get install vim gdb valgrind
+$ sudo cowbuilder --login --distribution $REL --bindmounts $PWD/pbuilder-shared:/pbuilder-shared --save-after-login
+# /pbuilder-shared/initialize-container
+# ... do other specific setup which is needed for your project ...
 # exit
 ```
 * in case you'll need debuginfo packages for symbolizing backtraces,

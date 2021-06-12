@@ -40,26 +40,24 @@ SHARED_DIR=$PWD/pbuilder-shared
 TARGET_SHARED_DIR=/$(basename $SHARED_DIR)
 REL=$(lsb_release -cs)  # Should match pbuilder's chroot!
 
-if test -z "${PBUILDER:-}"; then
-  PBUILDER=cowbuilder
-fi
-
 print_help_and_exit() {
   cat <<EOF
 $(basename $0) [OPT] PKG...
 Build and run tests for Debian packages.
 
 Available options:
+  --cowbuilder       Use cowbuilder (instead of pbuilder).
+  --disable-hooks    Do not run hooks in pbuild-shared.
+  --disable-timeout  Do not abort build on timeout (for manual debug).
+  -h, --help         Print this message and exit.
+  --pbuilder         Use pbuilder (instead of cowbuilder).
+  --pbuilder-opts O  Forward options to pbuilder/cowbuilder.
   --shell-on-error   Drop to interactive shell on error.
   --shell-on-start   Drop to interactive shell before build.
   --shell-on-finish  Drop to interactive shell on completion.
-  --disable-hooks    Do not run hooks in pbuild-shared.
-  --disable-timeout  Do not abort build on timeout (for manual debug).
   --timeout TO       Specify timeout for package build. TO has standard
                      duration syntax [0-9]*[hms] (e.g. 100m or 1h).
                      Automatically enabled on any --shell-on-*.
-  --pbuilder-opts O  Forward options to pbuilder/cowbuilder.
-  -h, --help         Print this message and exit.
 EOF
   exit
 }
@@ -69,14 +67,23 @@ error() {
   exit 1
 }
 
-TEMP=$(getopt -o 'ht:' --long 'help,disable-hooks,shell-on-start,shell-on-finish,shell-on-error,disable-timeout,timeout:,pbuilder-opts:' -n $(basename $0) -- "$@")
+TEMP=$(getopt -o 'ht:' --long 'cowbuilder,disable-hooks,disable-timeout,help,pbuilder,pbuilder-opts:,shell-on-start,shell-on-finish,shell-on-error,timeout:' -n $(basename $0) -- "$@")
 eval set -- "$TEMP"
 
 ENABLE_HOOKS=1
 TO='--timeout 2h'
 PB_OPTS=
+PBUILDER=cowbuilder
 while true; do
   case "$1" in
+    --pbuilder)
+      PBUILDER=pbuilder
+      shift
+      ;;
+    --cowbuilder)
+      PBUILDER=cowbuilder
+      shift
+      ;;
     --shell-on-start)
       SHELL_ON_START=1
       TO=
@@ -187,8 +194,11 @@ for p in $@; do
   # Workaround for network shutdowns on Ubuntu 16
   # FIXME: get rid of this !!!
   if ! ping -c5 us.archive.ubuntu.com >/dev/null 2>&1; then
-    #sudo service networking restart
-    sudo service network-manager restart
+    for srv in network-manager networking; do
+      if service --status-all 2>&1 | grep -q $srv; then
+        sudo service $srv restart
+      fi
+    done
   fi
 
   # Skip large assets
@@ -229,7 +239,11 @@ for p in $@; do
 
   # Copy additional outputs
 
-  journalctl -k -S "$start_time" > $ODIR/$p/syslog
+  if ! which journalctl > /dev/null; then
+    echo >&2 'warning: journalctl not installed, syslog will not be collected'
+  else
+    journalctl -k -S "$start_time" > $ODIR/$p/syslog
+  fi
 
   # Not all files may be copyable is finish hook failed to change perms due to timeout
   cp -r $SHARED_DIR/output $ODIR/$p || true
