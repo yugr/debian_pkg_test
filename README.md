@@ -22,13 +22,7 @@ so it's quick, dirty and probably not very well designed.
 
 Firstly you need to inform APT about all existing package repositories:
 ```
-$ SERVER=http://us.archive.ubuntu.com/ubuntu
-$ REL=$(lsb_release -cs)
-$ COMPONENTS='main universe multiverse restricted'
-$ for REPO in $REL $REL-updates $REL-backports $REL-security; do
-    echo deb $SERVER $REPO $COMPONENTS
-    echo deb-src $SERVER $REPO $COMPONENTS
-  done | sudo tee /etc/apt/sources.list
+$ sudo sed -i -e 's/^# deb-src/deb-src/' /etc/apt/sources.list
 $ sudo apt-get update
 ```
 
@@ -44,6 +38,9 @@ $USER ALL=(ALL) NOPASSWD: /usr/sbin/cowbuilder
 ```
 * set up a chroot (use `--basepath` if you need multiple chroots):
 ```
+$ SERVER=http://us.archive.ubuntu.com/ubuntu
+$ REL=$(lsb_release -cs)
+$ COMPONENTS='main universe multiverse restricted'
 $ cd path/to/debian_pkg_test
 $ sudo cowbuilder --create --distribution $REL --components "$COMPONENTS"
 $ sudo cowbuilder --login --distribution $REL --bindmounts $PWD/pbuilder-shared:/pbuilder-shared --save-after-login

@@ -3,16 +3,8 @@
 set -eu
 set -x
 
-apt-get install lsb-release
-
 # This should be aligned with host setup instructions in README.md...
-SERVER=http://us.archive.ubuntu.com/ubuntu
-REL=$(lsb_release -cs)
-COMPONENTS='main universe multiverse restricted'
-for REPO in $REL $REL-updates $REL-backports $REL-security; do
-  echo deb $SERVER $REPO $COMPONENTS
-  echo deb-src $SERVER $REPO $COMPONENTS
-done | tee /etc/apt/sources.list
+sudo sed -i -e 's/^# deb-src/deb-src/' /etc/apt/sources.list
 
 apt-get update
 apt-get upgrade -y
