@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# Forward all StackRandomizer variables to chroot
+# Forward all DirtyFrame variables to chroot
 for var in $(set | grep '^RAN\w\+=' | cut -d= -f1); do
   echo export $var=$(eval "echo \$$var")
 done
@@ -11,7 +11,7 @@ done
 # * some projects simply ignore CC/CXX
 # * some treat them differently from GCC
 #   (e.g. blt project compilation fails under CC=rancc)
-echo 'export PATH=$SHARED_DIR/StackRandomizer/out/fake-gcc:$PATH'
+echo 'export PATH=$SHARED_DIR/DirtyFrame/out/fake-gcc:$PATH'
 
 # Do not print warnings to stderr as this may puzzle build system
 echo 'export RANCC_OUTPUT=$SHARED_DIR/output/warns.log'

@@ -12,4 +12,4 @@ done
 touch $SHARED_DIR/output/warns.log
 chmod a+w $SHARED_DIR/output/warns.log
 
-echo "StackRandomizer: GCC intercepted successfully"
+echo "DirtyFrame: GCC intercepted successfully"
