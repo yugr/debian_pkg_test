@@ -3,6 +3,8 @@
 set -eu
 set -x
 
+apt-get install lsb-release
+
 # This should be aligned with host setup instructions in README.md...
 SERVER=http://us.archive.ubuntu.com/ubuntu
 REL=$(lsb_release -cs)
