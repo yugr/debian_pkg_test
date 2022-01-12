@@ -1,6 +1,6 @@
 #!/bin/sh -eux
 
-# Copyright 2015-2021 Yury Gribov
+# Copyright 2015-2022 Yury Gribov
 # 
 # Use of this source code is governed by MIT license that can be
 # found in the LICENSE.txt file.
@@ -138,7 +138,9 @@ fi
 tic
 
 # Do not hang VM...
-ulimit -S -v $((512*1024))
+MEM=$(cat /proc/meminfo | awk '/MemTotal:/{print $2}')
+ulimit -S -v $((MEM / 4))
+
 
 if ! test -f pbuilder-hooks/B*autopkgtest; then
   warn "it's recommended to install B92autopkgtest (available in pbuilder since 2.17)"
