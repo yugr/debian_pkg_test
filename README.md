@@ -54,10 +54,10 @@ $ sudo cowbuilder --login --distribution $REL --bindmounts $PWD/pbuilder-shared:
   subdir (can't include it directly due to incompatible license)
 * do tool-specific setup; this usually means installing prerequisites, making folder
   for logs, building/installing necessary files inside the chroot; e.g. for
-  StackWipe:
+  DirtyFrame:
 ```
 # apt-get install python
-# cd /pbuilder-shared/StackWipe
+# cd /pbuilder-shared/DirtyFrame
 # make clean all
 ```
   (`pbuilder-shared/` folder will be shared across host and chroot, mounted in / in chroot).
