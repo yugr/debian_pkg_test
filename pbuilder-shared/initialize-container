@@ -4,7 +4,7 @@ set -eu
 set -x
 
 # This should be aligned with host setup instructions in README.md...
-sudo sed -i -e 's/^# deb-src/deb-src/' /etc/apt/sources.list
+sed -i -e 's/^# deb-src/deb-src/' /etc/apt/sources.list
 
 apt-get update
 apt-get upgrade -y
@@ -23,4 +23,4 @@ rngd -b -r /dev/urandom
 apt-get install -y wget
 
 # Install packages for debugging errors inside chroot
-apt-get install -y vim gdb valgrind
+apt-get install -y vim gdb valgrind strace
