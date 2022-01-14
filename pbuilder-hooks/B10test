@@ -5,7 +5,7 @@
 # Use of this source code is governed by MIT license that can be
 # found in the LICENSE.txt file.
 
-TIMEOUT='timeout -k 1m 20m'
+TIMEOUT='timeout -k 1m 30m'
 
 find_top_makefile() {
   for mf in $(find -name Makefile); do
