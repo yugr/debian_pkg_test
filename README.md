@@ -108,7 +108,7 @@ Another option is to try several hundred top packages from
 [Debian package rating](https://popcon.debian.org/by_vote):
 ```
 # Remove 'head' below to get full list
-$ curl http://popcon.debian.org/by_vote 2>/dev/null | awk '/^[0-9]/{print $2}' | xargs ./get_source | head -100 | while read p; do ./is_c_pkg $p && echo $p; done | sort -u
+$ curl http://popcon.debian.org/by_vote 2>/dev/null | awk '/^[0-9]/{print $2}' | xargs ./get_source | head -100 | while read p; do test $(./get_package_type $p) = c && echo $p; done | sort -u
 ```
 
 You can also use [Debian Code Search](https://codesearch.debian.net) to search for packages which contain relevant APIs
@@ -117,7 +117,7 @@ You can also use [Debian Code Search](https://codesearch.debian.net) to search f
 Or just take first N packages from `apt-cache`:
 ```
 # Remove 'head' below to get full list
-$ apt-cache dump | awk '/^Package/ && !/:[^ ]|dbgsym/ { print $2; }' | xargs ./get_source | head -100 | while read p; do ./is_c_pkg $p && echo $p; done | sort -u
+$ apt-cache dump | awk '/^Package/ && !/:[^ ]|dbgsym/ { print $2; }' | xargs ./get_source | head -100 | while read p; do test $(./get_package_type $p) = c && echo $p; done | sort -u
 ```
 
 # Testing

@@ -1,0 +1,28 @@
+#!/bin/sh -eu
+
+# Copyright 2017-2022 Yury Gribov
+# 
+# Use of this source code is governed by MIT license that can be
+# found in the LICENSE.txt file.
+
+# Usage: get_package_type PKG
+# Quick and dirty identifier for language in which package is implemented.
+
+TMP=$(mktemp -d)
+trap "rm -rf $TMP" EXIT
+
+REL=$(lsb_release -cs)
+
+if ! (cd $TMP && rm -rf * && timeout 60 apt-get source $1/$REL > /dev/null 2>&1); then
+  return 1
+fi
+
+if test $(find $TMP -name \*.c -o -name \*.cpp -o -name \*.cxx -o -name \*.C -o -name \*.cc | wc -l) -gt 0; then
+  echo c
+elif test $(find $TMP -name \*.py | wc -l) -gt 0; then
+  echo python
+elif test $(find $TMP -name \*.rb | wc -l) -gt 0; then
+  echo ruby
+elif test $(find $TMP -name \*.pl -o -name \*.pm | wc -l) -gt 0; then
+  echo perl
+fi
