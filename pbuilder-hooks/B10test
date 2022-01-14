@@ -20,7 +20,7 @@ print_make_goals() {
 
 try_build_goal() {
   print_make_goals | grep -q "$1:" || return 1
-  $TIMEOUT make -k "$1" || true
+  $TIMEOUT make -k "$1" < /dev/null || true
 }
 
 try_build_goals() {
@@ -77,11 +77,11 @@ if test -n "$mf"; then
   fi
 elif test \( -f Build.PL -o -f Makefile.PL \) -a -x Build; then
   # Module::Build-style Perl package
-  $TIMEOUT ./Build test || true
+  $TIMEOUT ./Build test < /dev/null || true
 elif test -f setup.py; then
   # Python setuptools-based package
   apt-get install -y --force-yes python-dev python-nose
-  $TIMEOUT python setup.py test || true  # TODO: python3 ?
+  $TIMEOUT python setup.py test < /dev/null || true  # TODO: python3 ?
 else
   # Other buildsystems (waf e.g. sushi, scons e.g. balder2d)
   # or languages (Lua e.g. teeworlds, Ruby e.g. bsfilter)
