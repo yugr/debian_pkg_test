@@ -1,9 +1,14 @@
 #!/bin/sh -eu
 
-# Copyright 2017 Yury Gribov
+# Copyright 2017-2022 Yury Gribov
 # 
 # Use of this source code is governed by MIT license that can be
 # found in the LICENSE.txt file.
+
+# This simple script automates finding errors in build.
+# It's necessarily conservative and may detect a lot of unrelated messages
+# in stdout so prefer to use checker-specific mechanisms to identify errors
+# (custom patterns, dedicated location for logs, etc.).
 
 if test $# != 1; then
   cat <<EOF
@@ -17,5 +22,4 @@ fi
 GOOD_RE='Segmentation fault\|Bus error\|Illegal instruction\|Abort\|Terminated\|Killed\|\<SEGV\>\|\<TRAP\|ABORT\|assertion\|error:\|failed\|segfault'
 BAD_RE='failed to verify signature\|Terminated.*sleep'
 
-cd $1
-grep -ri "$GOOD_RE" . | grep -v "$BAD_RE"
+grep -rv "$BAD_RE" "$1" | grep -i "$GOOD_RE"

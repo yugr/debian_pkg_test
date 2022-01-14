@@ -141,13 +141,14 @@ Filtering, deduplicating and interpreting results are hard to generalize
 so must be done by the user.
 
 E.g. in case of SortCheck you can simply apply `sort -u` to all
-collected `sortcheck.log`'s. StackWipe does not emit it's own error messages
+collected `sortcheck.log`'s. DirtyFrame does not emit it's own error messages
 but rather provokes abnormal behavior in application
 so you need to mine "interesting" messages yourself e.g. by comparing output of
 ```
 $ ./find_bugs path/to/logs
 ```
-to reference.
+to the reference (note that `find_bugs` is very conservative and will
+detect mostly unrelated messages).
 
 # Known issues
 
