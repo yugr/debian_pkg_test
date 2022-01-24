@@ -111,8 +111,12 @@ Another option is to try several hundred top packages from
 $ curl http://popcon.debian.org/by_vote 2>/dev/null | awk '/^[0-9]/{print $2}' | xargs ./get_source | head -100 | while read p; do test $(./get_package_type $p) = c && echo $p; done | sort -u
 ```
 
-You can also use [Debian Code Search](https://codesearch.debian.net) to search for packages which contain relevant APIs
-([debian-code-search-cli](https://github.com/FedericoCeratto/debian-code-search-cli) gives cmdline interface).
+You can also use [Debian Code Search](https://codesearch.debian.net) to search for packages which contain relevant APIs.
+[debian-code-search-cli](https://github.com/FedericoCeratto/debian-code-search-cli) gives cmdline interface:
+```
+$ ./codesearch_cli.py -x libreoffice -x gcc -x llvm -d std::sort --max-results 1000 > codesearch.txt
+$ cat codesearch.txt | awk -F/ '/path: /{print $1}' | sort | uniq -c | sort -nk1
+```
 
 Or just take first N packages from `apt-cache`:
 ```
