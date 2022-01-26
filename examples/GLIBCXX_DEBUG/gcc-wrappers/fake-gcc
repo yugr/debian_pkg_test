@@ -1,0 +1,12 @@
+#!/bin/sh -eu
+
+# Copyright 2022 Yury Gribov
+#
+# Use of this source code is governed by MIT license that can be
+# found in the LICENSE.txt file.
+
+# Remove ourselves from PATH (to avoid recursion)
+PATH=$(echo "$PATH" | tr : '\n' | grep -v gcc-wrappers | tr '\n' :)
+
+# TODO: fallback to gcc on error?
+exec $0 "$@" -D_GLIBCXX_DEBUG

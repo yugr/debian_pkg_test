@@ -1,0 +1,8 @@
+#!/bin/sh -eux
+
+# Verify basic functionality
+for CC in gcc x86_64-linux-gnu-gcc; do
+  which $CC | grep gcc-wrappers
+done
+
+echo "GLIBCXX_DEBUG: GCC intercepted successfully"
