@@ -38,10 +38,10 @@ $USER ALL=(ALL) NOPASSWD: /usr/sbin/cowbuilder
 ```
 * set up a chroot (use `--basepath` if you need multiple chroots):
 ```
+$ cd path/to/debian_pkg_test
 $ SERVER=http://us.archive.ubuntu.com/ubuntu
 $ REL=$(lsb_release -cs)
 $ COMPONENTS='main universe multiverse restricted'
-$ cd path/to/debian_pkg_test
 $ sudo cowbuilder --create --distribution $REL --components "$COMPONENTS"
 $ sudo cowbuilder --login --distribution $REL --bindmounts $PWD/pbuilder-shared:/pbuilder-shared --save-after-login
 # /pbuilder-shared/initialize-container
@@ -80,7 +80,7 @@ If `cowbuilder` ever fails with `Invalid cross-device link` error,
 you may need to manually delete and unmount leftover chroots:
 ```
 $ sudo rm -rf /var/cache/pbuilder/build/cow.20593
-$ sudo umount /var/cache/pbuilder/build/cow.20593/dev/console
+$ sudo umount /var/cache/pbuilder/base.cow/dev/console
 ```
 
 If you need to analyze what's going on in a container, run `test_pkgs`

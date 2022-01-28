@@ -1,0 +1,3 @@
+#!/bin/sh -eu
+echo 'export SORTCHECK_SYSLOG=1'
+echo 'export PATH=/pbuilder-shared/sortcheckxx/scripts:$PATH'
