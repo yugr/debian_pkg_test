@@ -8,9 +8,9 @@
 TIMEOUT='timeout -k 1m 30m'
 
 find_top_makefile() {
-  for mf in $(find -name Makefile); do
-    depth=$(echo $mf | grep -o / | wc -l)
-    echo $mf $depth
+  for makefile in $(find -name Makefile); do
+    depth=$(echo $makefile | grep -o / | wc -l)
+    echo $makefile $depth
   done | sort -nk2 | head -1 | awk '{print $1}'
 }
 
@@ -46,14 +46,16 @@ try_build_subdirs() {
 ROOT=/tmp/buildd/*/debian/..
 cd $ROOT
 
-mf=$(find_top_makefile)
+makefile=$(find_top_makefile)
+ninja=$(find -name build.ninja | head -1)
+meson=$(find -name meson-info | head -1)
 
 ulimit -c unlimited
 
 # TODO: run tests as build user, not root
 
-if test -n "$mf"; then
-  cd $(dirname $mf)
+if test -n "$makefile"; then
+  cd $(dirname $makefile)
 
   # Best effort to run package standard tests here.
   # Note that these might have already run under dh_auto_test
@@ -75,6 +77,14 @@ if test -n "$mf"; then
     ls -R $ROOT >&2
     $(dirname $0)/C10shell
   fi
+elif test -n "$ninja"; then
+  for goal in test check check-all checks tests; do
+    ninja -C $(dirname $ninja) $goal || continue
+    break
+  done
+elif test -n "$meson"; then
+  cd $(dirname $meson)
+  meson test
 elif test \( -f Build.PL -o -f Makefile.PL \) -a -x Build; then
   # Module::Build-style Perl package
   $TIMEOUT ./Build test < /dev/null || true
@@ -83,7 +93,7 @@ elif test -f setup.py; then
   apt-get install -y --force-yes python-dev python-nose
   $TIMEOUT python setup.py test < /dev/null || true  # TODO: python3 ?
 else
-  # Other buildsystems (waf e.g. sushi, scons e.g. balder2d)
+  # Other buildsystems (waf e.g. sushi, scons e.g. balder2d, gradle, bazel)
   # or languages (Lua e.g. teeworlds, Ruby e.g. bsfilter)
   # seem to be too rare to bother.
   echo >&2 "$(basename $0): don't know type of project in $PWD; here is the directory contents:"
