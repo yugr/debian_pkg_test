@@ -1,5 +1,7 @@
 #!/bin/sh -eux
 
+apt-get -y install llvm-dev libclang-dev
+
 # Quick verification
 apt-get -y install file
 file -L `which cc` | grep 'POSIX shell script'
