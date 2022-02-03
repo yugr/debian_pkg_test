@@ -2,3 +2,4 @@
 echo 'export SORTCHECK_SYSLOG=1'
 echo 'export PATH=/pbuilder-shared/sortcheckxx/scripts:$PATH'
 echo 'export SORTCHECK_CHECKS=0xfffe'
+echo 'export SORTCHECK_OUTPUT=/pbuilder-shared/output/sortcheck.log'
