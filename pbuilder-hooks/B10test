@@ -75,7 +75,7 @@ if test -n "$makefile"; then
     # TODO: another approach - grep sub-Makefiles for interesting goals.
     :
   else
-    echo >&2 "$(basename $0): don't know how to run tests in $PWD; here are the top-level goals:"
+    echo >&2 "$(basename $0): don't know how to run tests in $PWD; here are the top-level Makefile goals:"
     print_make_goals >&2 || true
 #    echo >&2 "And here is the directory contents:"
 #    ls -R $ROOT >&2
@@ -97,10 +97,20 @@ elif test -f setup.py; then
   apt-get install -y --force-yes python-dev python-nose
   $TIMEOUT python setup.py test < /dev/null || true  # TODO: python3 ?
 else
-  # Other buildsystems (waf e.g. sushi, scons e.g. balder2d, gradle, bazel)
-  # or languages (Lua e.g. teeworlds, Ruby e.g. bsfilter)
+  # Other buildsystems or languages (Lua e.g. teeworlds, Ruby e.g. bsfilter)
   # seem to be too rare to bother.
-  echo >&2 "$(basename $0): don't know type of project in $PWD"
+  if test -f SConstruct; then  # balder2d
+    prj_type='scons '
+  elif test -f waf; then  # sushi
+    prj_type='waf '
+  elif test -f build.gradle; then
+    prj_type='gradle '
+  elif test -f BUILD; then
+    prj_type='Bazel '
+  else
+    prj_type=
+  fi
+  echo >&2 "$(basename $0): don't know how to test ${prj_type}project in $PWD"
 #  echo >&2 "And here is the directory contents:"
 #  ls -R $ROOT >&2
   $(dirname $0)/C10shell
