@@ -12,14 +12,14 @@ find_top_makefile() {
     echo obj-x86_64-linux-gnu/Makefile
     return
   fi
-  for makefile in $(find -name Makefile); do
+  for makefile in $(find -name '[Mm]akefile'); do
     depth=$(echo $makefile | grep -o / | wc -l)
     echo $makefile $depth
   done | sort -nk2 | head -1 | awk '{print $1}'
 }
 
 print_make_goals() {
-  grep -o '^[A-Za-z0-9_]\+:' Makefile
+  grep -o '^[A-Za-z0-9_]\+:' [Mm]akefile
 }
 
 try_build_goal() {
@@ -39,7 +39,7 @@ try_build_goals() {
 try_build_subdirs() {
   for subdir in test tests testsuite example examples; do
   for g in $@; do
-    if (test -d $subdir && test -f $subdir/Makefile && cd $subdir && try_build_goal $g); then
+    if (test -d $subdir && test -f $subdir/Makefile -o -f $subdir/makefile && cd $subdir && try_build_goal $g); then
       return 0
     fi
   done
