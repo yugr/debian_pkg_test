@@ -1,5 +1,7 @@
 #!/bin/sh -eux
 
+apt-get -y install llvm llvm-dev libclang-dev
+
 # Ensure output file is writable by all users
 touch $SHARED_DIR/output/sortcheck.log
 chmod a+rwx $SHARED_DIR/output/sortcheck.log
