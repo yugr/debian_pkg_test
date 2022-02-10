@@ -100,7 +100,7 @@ or [Fuzzing project](https://blog.fuzzing-project.org/)):
 * network: openvpn vsftpd curl apache2 clamav bind9 ntp nginx
 * crypto: openssh openssl libgcrypt20 gnutls28 botan1.10
 * databases: mysql-5.5 mariadb-5.5 postgresql-common db5.3 sqlite3
-* compiler/interpreters: gcc clang bash openjdk-6 ghc php5 perl python2.7 lua50 octave
+* compiler/interpreters: gcc clang bash openjdk-6 ghc php5 perl python2.7 lua50 octave protobuf
 * system: dbus samba gstreamer1.0 systemd
 * other: libftdi libxml2 libtasn1-6 dpkg libarchive
 
