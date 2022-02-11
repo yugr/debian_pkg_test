@@ -56,7 +56,7 @@ Available options:
   Debugging:
   --shell-on-error   Drop to interactive shell on error.
   --shell-on-start   Drop to interactive shell before build.
-  --shell-on-finish  Drop to interactive shell on completion.
+  --shell-on-finish  Drop to interactive shell on successful completion.
   --disable-hooks    Do not run hooks in pbuild-shared.
 
   Resource control:
