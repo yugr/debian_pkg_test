@@ -231,6 +231,14 @@ for p in $@; do
     fi
   fi
 
+  # Skip bad packages that hang build
+  # TODO: figure out what happens
+  if echo $p | grep -q '^\(fish\)$'; then
+    NSKIPS=$((NSKIPS+1))
+    warn "skipping BAD package $p"
+    continue
+  fi
+
   # Skip large assets
   size=$(apt-cache show $p/$REL | grep ^Size: | awk '{print $2}' | sum)
   if test $size -gt $(( 128 * 1024 * 1024 )); then
