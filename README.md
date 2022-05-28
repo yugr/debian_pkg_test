@@ -112,7 +112,7 @@ $ curl http://popcon.debian.org/by_vote 2>/dev/null | awk '/^[0-9]/{print $2}' |
 ```
 
 You can also use [Debian Code Search](https://codesearch.debian.net) to search for packages which contain relevant APIs.
-[debian-code-search-cli](https://github.com/FedericoCeratto/debian-code-search-cli) gives cmdline interface:
+[codesearch-cli](https://salsa.debian.org/debian/codesearch-cli) gives cmdline interface:
 ```
 $ ./codesearch_cli.py -x libreoffice -x gcc -x llvm -d std::sort --max-results 1000 > codesearch.txt
 $ cat codesearch.txt | awk -F/ '/path: /{print $1}' | sort | uniq -c | sort -nk1
