@@ -1,0 +1,1 @@
+/usr/bin/cmake -DBUILD_TESTING=ON -DBUILD_TESTS=ON "$@"

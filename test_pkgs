@@ -184,6 +184,7 @@ export SHELL_ON_START=${SHELL_ON_START:-}
 export SHELL_ON_FINISH=${SHELL_ON_FINISH:-}
 export SHELL_ON_ERROR=${SHELL_ON_ERROR:-}
 export ENABLE_HOOKS=${ENABLE_HOOKS:-}
+export PATH=/pbuilder-shared/wrappers:\$PATH
 EOF
 
 if test -n "${ENABLE_HOOKS:-}" -a -x $SHARED_DIR/hooks/env; then
