@@ -97,7 +97,7 @@ Here's a short list of security-critical software which I typically use for test
 or [Fuzzing project](https://blog.fuzzing-project.org/)):
 * media: freetype cairo libsdl2 pango1.0 tiff djvulibre libjpeg libpng libtiff libsndfile audiofile openjpeg mupdf flac libmatroska
 * media (large): ffmpeg gimp mesa imagemagick vlc evince opencv
-* network: openvpn vsftpd curl apache2 clamav bind9 ntp nginx
+* network: openvpn vsftpd curl apache2 clamav bind9 ntp nginx wireshark
 * crypto: openssh openssl libgcrypt20 gnutls28 botan1.10
 * databases: mysql-5.5 mariadb-5.5 postgresql-common db5.3 sqlite3
 * compilers/interpreters: gcc llvm bash openjdk-6 ghc php5 perl python2.7 lua50 octave protobuf
