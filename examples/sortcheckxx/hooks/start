@@ -1,6 +1,7 @@
 #!/bin/sh -eux
 
 apt-get -y install llvm llvm-dev libclang-dev clang
+apt-get -y install libomp-dev  # Many packages need OpenMP
 
 # Ensure output file is writable by all users
 touch $SHARED_DIR/output/sortcheck.log
