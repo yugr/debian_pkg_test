@@ -9,4 +9,4 @@ chmod a+rwx $SHARED_DIR/output/sortcheck.log
 
 # Quick verification
 apt-get -y install file
-file -L `which cc` | grep 'POSIX shell script'
+file -L `which cc` | grep 'Python script'
