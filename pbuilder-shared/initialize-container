@@ -4,7 +4,7 @@ set -eu
 set -x
 
 # This should be aligned with host setup instructions in README.md...
-sed -i -e 's/^# deb-src/deb-src/' /etc/apt/sources.list
+sed -i -e 's/^# *deb-src/deb-src/' /etc/apt/sources.list
 
 apt-get update
 apt-get upgrade -y

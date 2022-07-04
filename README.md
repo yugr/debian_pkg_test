@@ -22,7 +22,7 @@ so it's quick, dirty and probably not very well designed.
 
 Firstly you need to inform APT about all existing package repositories:
 ```
-$ sudo sed -i -e 's/^# deb-src/deb-src/' /etc/apt/sources.list
+$ sudo sed -i -e 's/^# *deb-src/deb-src/' /etc/apt/sources.list
 $ sudo apt-get update
 ```
 
